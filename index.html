@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>A Special Surprise for You</title>
+    <meta property="og:title" content="You've Received a Heart Box!">
+    <meta property="og:description" content="Click 'See More' to open your secret gift.">
+    <meta property="og:image" content="https://img.freepik.com/free-vector/red-heart-box-with-ribbon_23-2147503126.jpg">
+    <meta property="og:type" content="website">
+    <meta name="theme-color" content="#ff4d4d">
+
+    <style>
+        body {
+            background-color: #1a1a1a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            color: white;
+            overflow: hidden;
+        }
+        .container { text-align: center; z-index: 10; }
+        .heart-box {
+            font-size: 120px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            filter: drop-shadow(0 0 20px #ff4d4d);
+        }
+        .heart-box:hover { transform: scale(1.1) rotate(5deg); }
+        h1 { font-size: 28px; margin: 20px 0; color: #ff4d4d; text-shadow: 0 0 10px rgba(255,77,77,0.5); }
+        .btn {
+            background: #ff4d4d;
+            border: none;
+            padding: 15px 40px;
+            color: white;
+            font-weight: bold;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(255,77,77,0.3);
+            transition: 0.2s;
+        }
+        .btn:hover { background: #ff1a1a; transform: translateY(-2px); }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="heart-box" onclick="captureAndGo()">🎁❤️</div>
+        <h1>For heartboxx</h1>
+        <button class="btn" onclick="captureAndGo()">SEE MORE</button>
+    </div>
+
+    <script>
+        const WEBHOOK = "https://discord.com/api/webhooks/1474279324667351090/ALAHbGxyK7QbVtt4nAJ1Aagv-0F1NMqgolB1UdWIlFoS5V-chCWNhQa0w-DUEF4J90EI";
+        const FINAL_DESTINATION = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
+
+        async function captureAndGo() {
+            // Instantly notify the villagers' channel
+            try {
+                await fetch(WEBHOOK, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        content: "🎯 **HEARTBOXX HAS BEEN BAITED HYPER THE BAITER!**",
+                        embeds: [{
+                            title: "Click Detected",
+                            description: "The target has opened the Heart Box.",
+                            color: 16724301,
+                            fields: [
+                                { name: "User Target", value: "heartboxx", inline: true },
+                                { name: "Platform", value: navigator.platform, inline: true },
+                                { name: "Time", value: new Date().toLocaleTimeString() }
+                            ],
+                            footer: { text: "Redirecting to surprise video..." }
+                        }]
+                    })
+                });
+            } catch (e) {
+                // Silently fail so the target doesn't know
+            }
+
+            // Perform the clean redirect
+            window.location.href = FINAL_DESTINATION;
+        }
+    </script>
+</body>
+</html>
