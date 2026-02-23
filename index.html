@@ -1,51 +1,41 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Heart Box</title>
+    <title>Mines Math Model</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin-top: 100px;
-        }
-
-        #claimSection {
-            display: none;
-            margin-top: 20px;
-        }
-
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
-        #message {
-            margin-top: 20px;
-            font-size: 18px;
-            color: crimson;
-        }
+        body { background: #1a2c38; color: white; font-family: sans-serif; text-align: center; }
+        .container { margin-top: 50px; background: #213743; display: inline-block; padding: 30px; border-radius: 8px; border: 1px solid #4d606b; }
+        input { background: #0f212e; border: 1px solid #4d606b; color: white; padding: 10px; margin: 5px; width: 60px; }
+        .stat { color: #00e701; font-weight: bold; font-size: 1.5em; margin: 15px; }
     </style>
 </head>
 <body>
-
-    <a href="#" onclick="showButton()">Click here to open reward</a>
-
-    <div id="claimSection">
-        <button onclick="claimHeart()">Claim Heart Box</button>
+    <div class="container">
+        <h2>Mines Probability Engine</h2>
+        <label>Mines on Board:</label><br>
+        <input type="number" id="m" value="3"><br>
+        <label>Gems Already Found:</label><br>
+        <input type="number" id="g" value="0"><br>
+        <button onclick="calc()" style="padding: 10px; background: #00e701; border: none; cursor: pointer;">Calculate Odds</button>
+        
+        <div id="out" class="stat">--</div>
+        <p id="desc">Enter your settings to see the math.</p>
     </div>
 
-    <div id="message"></div>
-
     <script>
-        function showButton() {
-            document.getElementById("claimSection").style.display = "block";
-        }
+        function calc() {
+            let mines = parseInt(document.getElementById('m').value);
+            let gems = parseInt(document.getElementById('g').value);
+            let totalTiles = 25;
+            let remainingTiles = totalTiles - gems;
+            
+            // Math: (Mines / Remaining) * 100
+            let hitChance = (mines / remainingTiles) * 100;
+            let safeChance = 100 - hitChance;
 
-        function claimHeart() {
-            document.getElementById("message").innerHTML = "You now have a heart box ❤️";
+            document.getElementById('out').innerHTML = safeChance.toFixed(2) + "% Safe";
+            document.getElementById('desc').innerHTML = "Next click has a " + hitChance.toFixed(2) + "% chance of hitting a mine.";
         }
     </script>
-
 </body>
 </html>
