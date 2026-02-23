@@ -1,41 +1,75 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Mines Math Model</title>
+    <title>Mines Math Heat Map</title>
     <style>
-        body { background: #1a2c38; color: white; font-family: sans-serif; text-align: center; }
-        .container { margin-top: 50px; background: #213743; display: inline-block; padding: 30px; border-radius: 8px; border: 1px solid #4d606b; }
-        input { background: #0f212e; border: 1px solid #4d606b; color: white; padding: 10px; margin: 5px; width: 60px; }
-        .stat { color: #00e701; font-weight: bold; font-size: 1.5em; margin: 15px; }
+        body { background: #0f212e; color: white; font-family: sans-serif; text-align: center; }
+        .grid { display: grid; grid-template-columns: repeat(5, 60px); gap: 10px; justify-content: center; margin-top: 20px; }
+        .tile { width: 60px; height: 60px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 10px; cursor: pointer; transition: 0.3s; border: 1px solid #2f4553; }
+        .controls { margin-bottom: 20px; background: #1a2c38; padding: 20px; display: inline-block; border-radius: 8px; }
+        input { background: #071621; border: 1px solid #2f4553; color: white; padding: 5px; width: 50px; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h2>Mines Probability Engine</h2>
-        <label>Mines on Board:</label><br>
-        <input type="number" id="m" value="3"><br>
-        <label>Gems Already Found:</label><br>
-        <input type="number" id="g" value="0"><br>
-        <button onclick="calc()" style="padding: 10px; background: #00e701; border: none; cursor: pointer;">Calculate Odds</button>
-        
-        <div id="out" class="stat">--</div>
-        <p id="desc">Enter your settings to see the math.</p>
+
+    <h2>Mathematical Risk Heat Map</h2>
+    <div class="controls">
+        Mines: <input type="number" id="mineCount" value="3" min="1" max="24" onchange="resetBoard()">
+        <button onclick="resetBoard()">Reset Board</button>
     </div>
 
-    <script>
-        function calc() {
-            let mines = parseInt(document.getElementById('m').value);
-            let gems = parseInt(document.getElementById('g').value);
-            let totalTiles = 25;
-            let remainingTiles = totalTiles - gems;
-            
-            // Math: (Mines / Remaining) * 100
-            let hitChance = (mines / remainingTiles) * 100;
-            let safeChance = 100 - hitChance;
+    <div class="grid" id="board"></div>
+    <p id="status">Click tiles to calculate risk density.</p>
 
-            document.getElementById('out').innerHTML = safeChance.toFixed(2) + "% Safe";
-            document.getElementById('desc').innerHTML = "Next click has a " + hitChance.toFixed(2) + "% chance of hitting a mine.";
+    <script>
+        let picked = 0;
+        
+        function resetBoard() {
+            picked = 0;
+            const board = document.getElementById('board');
+            board.innerHTML = '';
+            for (let i = 0; i < 25; i++) {
+                let btn = document.createElement('div');
+                btn.className = 'tile';
+                btn.id = 'tile-' + i;
+                btn.style.backgroundColor = '#2f4553';
+                btn.onclick = () => markTile(i);
+                board.appendChild(btn);
+            }
+            updateHeatMap();
         }
+
+        function markTile(id) {
+            let el = document.getElementById('tile-' + id);
+            if (el.innerHTML === "SAFE") return;
+            el.innerHTML = "SAFE";
+            el.style.backgroundColor = "#00e701";
+            el.style.color = "#000";
+            picked++;
+            updateHeatMap();
+        }
+
+        function updateHeatMap() {
+            const mines = parseInt(document.getElementById('mineCount').value);
+            const remainingTiles = 25 - picked;
+            const hitChance = (mines / remainingTiles) * 100;
+            
+            // Calculate color based on risk (0% green -> 100% red)
+            const red = Math.min(255, (hitChance * 5.1)); 
+            const green = Math.max(0, 255 - (hitChance * 5.1));
+            const color = `rgb(${red}, ${green}, 50)`;
+
+            for (let i = 0; i < 25; i++) {
+                let el = document.getElementById('tile-' + i);
+                if (el.innerHTML !== "SAFE") {
+                    el.style.backgroundColor = color;
+                    el.innerHTML = hitChance.toFixed(1) + "%";
+                }
+            }
+            document.getElementById('status').innerHTML = `Tiles picked: ${picked} | Board Risk: ${hitChance.toFixed(2)}%`;
+        }
+
+        resetBoard();
     </script>
 </body>
 </html>
