@@ -1,75 +1,117 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Mines Math Heat Map</title>
+    <meta charset="UTF-8">
+    <title>MATABASE // TARGET: ICYTHECOOLEST</title>
     <style>
-        body { background: #0f212e; color: white; font-family: sans-serif; text-align: center; }
-        .grid { display: grid; grid-template-columns: repeat(5, 60px); gap: 10px; justify-content: center; margin-top: 20px; }
-        .tile { width: 60px; height: 60px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 10px; cursor: pointer; transition: 0.3s; border: 1px solid #2f4553; }
-        .controls { margin-bottom: 20px; background: #1a2c38; padding: 20px; display: inline-block; border-radius: 8px; }
-        input { background: #071621; border: 1px solid #2f4553; color: white; padding: 5px; width: 50px; }
+        :root {
+            --neon-blue: #00d2ff;
+            --matrix-green: #00ff41;
+            --void-bg: #050505;
+        }
+
+        body {
+            background-color: var(--void-bg);
+            color: var(--matrix-green);
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-image: linear-gradient(rgba(0, 255, 65, 0.05) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(0, 255, 65, 0.05) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        .terminal {
+            border: 1px solid var(--matrix-green);
+            padding: 30px;
+            background: rgba(0, 0, 0, 0.9);
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.2);
+            width: 450px;
+        }
+
+        .header {
+            border-bottom: 1px solid var(--matrix-green);
+            margin-bottom: 15px;
+            padding-bottom: 5px;
+            font-weight: bold;
+            color: var(--neon-blue);
+        }
+
+        .stat-line { margin: 10px 0; }
+        .label { color: #888; }
+        
+        .cosmetic-tag {
+            display: inline-block;
+            border: 1px solid var(--matrix-green);
+            padding: 2px 8px;
+            margin: 3px;
+            font-size: 0.8rem;
+            background: rgba(0, 255, 65, 0.1);
+        }
+
+        #sync-pulse {
+            float: right;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink { 0% { opacity: 0; } 50% { opacity: 1; } 100% { opacity: 0; } }
     </style>
 </head>
 <body>
 
-    <h2>Mathematical Risk Heat Map</h2>
-    <div class="controls">
-        Mines: <input type="number" id="mineCount" value="3" min="1" max="24" onchange="resetBoard()">
-        <button onclick="resetBoard()">Reset Board</button>
+<div class="terminal">
+    <div class="header">
+        [ SYSTEM SCAN ] <span id="sync-pulse">● SYNCING</span>
     </div>
+    
+    <div class="stat-line">
+        <span class="label">IDENT_NAME:</span> ICYTHECOOLEST
+    </div>
+    <div class="stat-line">
+        <span class="label">REGISTRY:</span> questfemboys.xyz/v1
+    </div>
+    
+    <div id="cosmetics-output">
+        <span class="label">DATA:</span> INITIALIZING_STREAM...
+    </div>
+</div>
 
-    <div class="grid" id="board"></div>
-    <p id="status">Click tiles to calculate risk density.</p>
+<script>
+    async function fetchCosmetics() {
+        const output = document.getElementById('cosmetics-output');
+        // NOTE: I am using the 'add' endpoint as you provided, 
+        // but typically you'd use a 'get' or 'profile' endpoint.
+        const API_URL = "https://www.questfemboys.xyz/api/users/add?username=ICYTHECOOLEST";
 
-    <script>
-        let picked = 0;
-        
-        function resetBoard() {
-            picked = 0;
-            const board = document.getElementById('board');
-            board.innerHTML = '';
-            for (let i = 0; i < 25; i++) {
-                let btn = document.createElement('div');
-                btn.className = 'tile';
-                btn.id = 'tile-' + i;
-                btn.style.backgroundColor = '#2f4553';
-                btn.onclick = () => markTile(i);
-                board.appendChild(btn);
-            }
-            updateHeatMap();
-        }
+        try {
+            const response = await fetch(API_URL);
+            const data = await response.json();
 
-        function markTile(id) {
-            let el = document.getElementById('tile-' + id);
-            if (el.innerHTML === "SAFE") return;
-            el.innerHTML = "SAFE";
-            el.style.backgroundColor = "#00e701";
-            el.style.color = "#000";
-            picked++;
-            updateHeatMap();
-        }
-
-        function updateHeatMap() {
-            const mines = parseInt(document.getElementById('mineCount').value);
-            const remainingTiles = 25 - picked;
-            const hitChance = (mines / remainingTiles) * 100;
+            // Logic to handle how the API returns cosmetics
+            // If the API returns a 'cosmetics' array:
+            let cosmeticHtml = '<br><span class="label">EQUIPPED_ITEMS:</span><br>';
             
-            // Calculate color based on risk (0% green -> 100% red)
-            const red = Math.min(255, (hitChance * 5.1)); 
-            const green = Math.max(0, 255 - (hitChance * 5.1));
-            const color = `rgb(${red}, ${green}, 50)`;
-
-            for (let i = 0; i < 25; i++) {
-                let el = document.getElementById('tile-' + i);
-                if (el.innerHTML !== "SAFE") {
-                    el.style.backgroundColor = color;
-                    el.innerHTML = hitChance.toFixed(1) + "%";
-                }
+            if (data.cosmetics && data.cosmetics.length > 0) {
+                data.cosmetics.forEach(item => {
+                    cosmeticHtml += `<span class="cosmetic-tag">${item.toUpperCase()}</span>`;
+                });
+            } else {
+                cosmeticHtml += "NO_COSMETICS_FOUND";
             }
-            document.getElementById('status').innerHTML = `Tiles picked: ${picked} | Board Risk: ${hitChance.toFixed(2)}%`;
-        }
 
-        resetBoard();
-    </script>
+            output.innerHTML = cosmeticHtml;
+
+        } catch (err) {
+            output.innerHTML = "<br><span style='color:red'>ERR: CONNECTION_REFUSED</span>";
+        }
+    }
+
+    // Auto-run on load
+    fetchCosmetics();
+</script>
+
 </body>
 </html>
