@@ -2,115 +2,131 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>MATABASE // ICYTHECOOLEST_SCAN</title>
+    <title>MATABASE // DATA_DUMP: ICYTHECOOLEST</title>
     <style>
         :root {
             --neon-green: #00ff41;
-            --matrix-fade: #003b00;
-            --void: #050505;
-            --alert: #ff003c;
+            --deep-purple: #240046;
+            --void: #020202;
         }
 
         body {
             background-color: var(--void);
             color: var(--neon-green);
-            font-family: 'Courier New', monospace;
-            margin: 20px;
+            font-family: 'Courier New', Courier, monospace;
+            padding: 20px;
+            background-image: radial-gradient(circle at center, #111 0%, #000 100%);
+        }
+
+        .grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            grid-gap: 20px;
-            background-image: linear-gradient(var(--matrix-fade) 1px, transparent 1px);
-            background-size: 100% 3px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
         }
 
-        .window {
+        .terminal-box {
             border: 1px solid var(--neon-green);
-            background: rgba(0, 0, 0, 0.9);
             padding: 15px;
-            box-shadow: 0 0 10px rgba(0, 255, 65, 0.1);
+            background: rgba(0, 0, 0, 0.85);
+            box-shadow: 0 0 15px rgba(0, 255, 65, 0.1);
         }
 
-        .full-width { grid-column: span 2; }
-        .title { 
-            background: var(--neon-green); 
-            color: black; 
-            padding: 2px 10px; 
-            font-weight: bold; 
-            margin-bottom: 10px;
+        .title {
+            background: var(--neon-green);
+            color: black;
+            padding: 2px 8px;
+            font-weight: bold;
             display: inline-block;
+            margin-bottom: 10px;
         }
 
-        ul { list-style: none; padding: 0; }
-        li { margin: 5px 0; padding-left: 15px; border-left: 2px solid var(--neon-green); }
-        
-        .loading { animation: blink 0.8s infinite; color: var(--alert); }
-        @keyframes blink { 0% { opacity: 0; } 50% { opacity: 1; } 100% { opacity: 0; } }
+        .data-line {
+            margin: 4px 0;
+            border-bottom: 1px solid #111;
+            display: flex;
+            justify-content: space-between;
+        }
 
-        .tag { color: #888; font-size: 0.8rem; text-transform: uppercase; }
+        .key { color: #888; font-size: 0.8rem; text-transform: uppercase; }
+        .val { color: var(--neon-green); font-weight: bold; }
+
+        #raw-dump {
+            font-size: 0.7rem;
+            color: #555;
+            word-break: break-all;
+            margin-top: 20px;
+            border-top: 1px dashed #333;
+            padding-top: 10px;
+        }
     </style>
 </head>
 <body>
 
-    <div class="window full-width">
-        <div class="title">SYSTEM_CORE</div>
-        <div>TARGET_ID: <span id="user-name">LOADING...</span></div>
-        <div>API_ENDPOINT: questfemboys.xyz/api/v1</div>
-        <div id="status" class="loading">ESTABLISHING_UPLINK...</div>
+    <h1>> MATABASE_v2 // ICYTHECOOLEST</h1>
+
+    <div class="grid">
+        <div class="terminal-box">
+            <div class="title">USER_REGISTRY</div>
+            <div id="registry-data">SCANNING...</div>
+        </div>
+
+        <div class="terminal-box">
+            <div class="title">COSMETIC_MANIFEST</div>
+            <div id="cosmetic-data">INITIALIZING...</div>
+        </div>
+
+        <div class="terminal-box">
+            <div class="title">SYSTEM_METADATA</div>
+            <div id="meta-data">AWAITING...</div>
+        </div>
     </div>
 
-    <div class="window">
-        <div class="title">COSMETICS_INVENTORY</div>
-        <ul id="cosmetic-list">
-            </ul>
-    </div>
-
-    <div class="window">
-        <div class="title">METADATA_EXTRACT</div>
-        <ul id="meta-list">
-            </ul>
-    </div>
+    <div id="raw-dump">RAW_API_STRING: </div>
 
     <script>
-        async function runScan() {
+        async function fullDataDump() {
             const api = "https://www.questfemboys.xyz/api/users/add?username=ICYTHECOOLEST";
             
             try {
                 const response = await fetch(api);
                 const data = await response.json();
 
-                // Update Header
-                document.getElementById('user-name').innerText = data.username || "ICYTHECOOLEST";
-                document.getElementById('status').innerText = "CONNECTION_STABLE // DATA_SORTED";
-                document.getElementById('status').classList.remove('loading');
+                // Show the raw string at the bottom for debugging
+                document.getElementById('raw-dump').innerText += JSON.stringify(data);
 
-                const cosmeticContainer = document.getElementById('cosmetic-list');
-                const metaContainer = document.getElementById('meta-list');
+                const registry = document.getElementById('registry-data');
+                const cosmetics = document.getElementById('cosmetic-data');
+                const meta = document.getElementById('meta-data');
 
-                // Clear placeholders
-                cosmeticContainer.innerHTML = "";
-                metaContainer.innerHTML = "";
+                registry.innerHTML = "";
+                cosmetics.innerHTML = "";
+                meta.innerHTML = "";
 
-                // LOOP & MATCH LOGIC
+                // THE LOGIC: Sort every single key in the API
                 Object.entries(data).forEach(([key, value]) => {
-                    // Match Cosmetics (Hats, Badges, etc)
-                    if (key.includes('cosmetic') || key.includes('hat') || Array.isArray(value)) {
-                        const items = Array.isArray(value) ? value : [value];
-                        items.forEach(item => {
-                            cosmeticContainer.innerHTML += `<li><span class="tag">${key}:</span> ${item}</li>`;
-                        });
+                    const line = `<div class="data-line"><span class="key">${key}:</span><span class="val">${value}</span></div>`;
+
+                    // 1. Sort into Registry (ID, Username, Dates)
+                    if (['username', 'id', 'created_at', 'last_login'].includes(key.toLowerCase())) {
+                        registry.innerHTML += line;
                     } 
-                    // Match everything else as Metadata
-                    else if (key !== 'username') {
-                        metaContainer.innerHTML += `<li><span class="tag">${key}:</span> ${value}</li>`;
+                    // 2. Sort into Cosmetics (Anything related to items or lists)
+                    else if (key.toLowerCase().includes('cosmetic') || Array.isArray(value) || key.includes('item')) {
+                        cosmetics.innerHTML += line;
+                    } 
+                    // 3. Everything else goes into Meta
+                    else {
+                        meta.innerHTML += line;
                     }
                 });
 
             } catch (err) {
-                document.getElementById('status').innerText = "ERROR: BYPASS_FAILED";
+                console.error(err);
+                document.body.innerHTML += "<h2 style='color:red; text-align:center'>CRITICAL_ERROR: API_OFFLINE</h2>";
             }
         }
 
-        runScan();
+        fullDataDump();
     </script>
 </body>
 </html>
