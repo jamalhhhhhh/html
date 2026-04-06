@@ -2,116 +2,118 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>MATABASE // TARGET: ICYTHECOOLEST</title>
+    <title>MATABASE // ICYTHECOOLEST</title>
     <style>
         :root {
-            --neon-blue: #00d2ff;
-            --matrix-green: #00ff41;
-            --void-bg: #050505;
+            --neon-green: #00ff41;
+            --bg-black: #050505;
+            --galaxy: #6a0dad;
         }
 
         body {
-            background-color: var(--void-bg);
-            color: var(--matrix-green);
-            font-family: 'Courier New', Courier, monospace;
+            background-color: var(--bg-black);
+            color: var(--neon-green);
+            font-family: 'Courier New', monospace;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
-            background-image: linear-gradient(rgba(0, 255, 65, 0.05) 1px, transparent 1px),
-                              linear-gradient(90deg, rgba(0, 255, 65, 0.05) 1px, transparent 1px);
-            background-size: 20px 20px;
+            background-image: radial-gradient(circle at center, #111 0%, #000 100%);
         }
 
-        .terminal {
-            border: 1px solid var(--matrix-green);
-            padding: 30px;
+        .profile-card {
+            border: 1px solid var(--neon-green);
             background: rgba(0, 0, 0, 0.9);
+            padding: 30px;
+            width: 400px;
             box-shadow: 0 0 20px rgba(0, 255, 65, 0.2);
-            width: 450px;
         }
 
         .header {
-            border-bottom: 1px solid var(--matrix-green);
-            margin-bottom: 15px;
-            padding-bottom: 5px;
-            font-weight: bold;
-            color: var(--neon-blue);
+            border-bottom: 1px solid var(--neon-green);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            letter-spacing: 2px;
         }
 
-        .stat-line { margin: 10px 0; }
-        .label { color: #888; }
-        
-        .cosmetic-tag {
-            display: inline-block;
-            border: 1px solid var(--matrix-green);
-            padding: 2px 8px;
-            margin: 3px;
-            font-size: 0.8rem;
-            background: rgba(0, 255, 65, 0.1);
+        .user-info { margin-bottom: 20px; }
+        .label { color: #888; font-size: 0.8rem; }
+
+        .cosmetics-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            max-height: 200px;
+            overflow-y: auto;
+            border-left: 2px solid var(--galaxy);
+            padding-left: 15px;
         }
 
-        #sync-pulse {
-            float: right;
-            animation: blink 1s infinite;
+        .cosmetic-item {
+            padding: 5px 0;
+            border-bottom: 1px solid #1a1a1a;
+            font-size: 0.9rem;
         }
 
+        .cosmetic-item::before {
+            content: "> ";
+            color: var(--galaxy);
+        }
+
+        #loading { animation: blink 1s infinite; }
         @keyframes blink { 0% { opacity: 0; } 50% { opacity: 1; } 100% { opacity: 0; } }
     </style>
 </head>
 <body>
 
-<div class="terminal">
-    <div class="header">
-        [ SYSTEM SCAN ] <span id="sync-pulse">● SYNCING</span>
-    </div>
-    
-    <div class="stat-line">
-        <span class="label">IDENT_NAME:</span> ICYTHECOOLEST
-    </div>
-    <div class="stat-line">
-        <span class="label">REGISTRY:</span> questfemboys.xyz/v1
-    </div>
-    
-    <div id="cosmetics-output">
-        <span class="label">DATA:</span> INITIALIZING_STREAM...
-    </div>
-</div>
+    <div class="profile-card">
+        <div class="header">MATABASE_SCAN</div>
+        
+        <div class="user-info">
+            <span class="label">IDENT_NAME:</span><br>
+            <strong>ICYTHECOOLEST</strong>
+        </div>
 
-<script>
-    async function fetchCosmetics() {
-        const output = document.getElementById('cosmetics-output');
-        // NOTE: I am using the 'add' endpoint as you provided, 
-        // but typically you'd use a 'get' or 'profile' endpoint.
-        const API_URL = "https://www.questfemboys.xyz/api/users/add?username=ICYTHECOOLEST";
+        <div class="user-info">
+            <span class="label">COSMETICS_MANIFEST:</span>
+            <ul id="cosmetics-list" class="cosmetics-list">
+                <li id="loading">FETCHING_DATA...</li>
+            </ul>
+        </div>
+    </div>
 
-        try {
-            const response = await fetch(API_URL);
-            const data = await response.json();
+    <script>
+        async function loadProfile() {
+            const list = document.getElementById('cosmetics-list');
+            // Using the API you provided
+            const api = "https://www.questfemboys.xyz/api/users/add?username=ICYTHECOOLEST";
 
-            // Logic to handle how the API returns cosmetics
-            // If the API returns a 'cosmetics' array:
-            let cosmeticHtml = '<br><span class="label">EQUIPPED_ITEMS:</span><br>';
-            
-            if (data.cosmetics && data.cosmetics.length > 0) {
-                data.cosmetics.forEach(item => {
-                    cosmeticHtml += `<span class="cosmetic-tag">${item.toUpperCase()}</span>`;
+            try {
+                const response = await fetch(api);
+                const data = await response.json();
+
+                // Clear loading text
+                list.innerHTML = "";
+
+                // If the API returns an object with cosmetics (adjust keys if different)
+                // Example assuming the API returns { "cosmetics": ["hat", "glasses"] }
+                const items = data.cosmetics || ["No items detected"];
+
+                items.forEach(item => {
+                    const li = document.createElement('li');
+                    li.className = "cosmetic-item";
+                    li.innerText = item.replace(/_/g, " ").toUpperCase();
+                    list.appendChild(li);
                 });
-            } else {
-                cosmeticHtml += "NO_COSMETICS_FOUND";
+
+            } catch (err) {
+                list.innerHTML = "<li style='color:red'>ERR: UNAVILABLE_PROTOCOL</li>";
             }
-
-            output.innerHTML = cosmeticHtml;
-
-        } catch (err) {
-            output.innerHTML = "<br><span style='color:red'>ERR: CONNECTION_REFUSED</span>";
         }
-    }
 
-    // Auto-run on load
-    fetchCosmetics();
-</script>
-
+        loadProfile();
+    </script>
 </body>
 </html>
