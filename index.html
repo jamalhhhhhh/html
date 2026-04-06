@@ -2,118 +2,115 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>MATABASE // ICYTHECOOLEST</title>
+    <title>MATABASE // ICYTHECOOLEST_SCAN</title>
     <style>
         :root {
             --neon-green: #00ff41;
-            --bg-black: #050505;
-            --galaxy: #6a0dad;
+            --matrix-fade: #003b00;
+            --void: #050505;
+            --alert: #ff003c;
         }
 
         body {
-            background-color: var(--bg-black);
+            background-color: var(--void);
             color: var(--neon-green);
             font-family: 'Courier New', monospace;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-image: radial-gradient(circle at center, #111 0%, #000 100%);
+            margin: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-gap: 20px;
+            background-image: linear-gradient(var(--matrix-fade) 1px, transparent 1px);
+            background-size: 100% 3px;
         }
 
-        .profile-card {
+        .window {
             border: 1px solid var(--neon-green);
             background: rgba(0, 0, 0, 0.9);
-            padding: 30px;
-            width: 400px;
-            box-shadow: 0 0 20px rgba(0, 255, 65, 0.2);
+            padding: 15px;
+            box-shadow: 0 0 10px rgba(0, 255, 65, 0.1);
         }
 
-        .header {
-            border-bottom: 1px solid var(--neon-green);
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-            font-size: 1.5rem;
-            letter-spacing: 2px;
+        .full-width { grid-column: span 2; }
+        .title { 
+            background: var(--neon-green); 
+            color: black; 
+            padding: 2px 10px; 
+            font-weight: bold; 
+            margin-bottom: 10px;
+            display: inline-block;
         }
 
-        .user-info { margin-bottom: 20px; }
-        .label { color: #888; font-size: 0.8rem; }
-
-        .cosmetics-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            max-height: 200px;
-            overflow-y: auto;
-            border-left: 2px solid var(--galaxy);
-            padding-left: 15px;
-        }
-
-        .cosmetic-item {
-            padding: 5px 0;
-            border-bottom: 1px solid #1a1a1a;
-            font-size: 0.9rem;
-        }
-
-        .cosmetic-item::before {
-            content: "> ";
-            color: var(--galaxy);
-        }
-
-        #loading { animation: blink 1s infinite; }
+        ul { list-style: none; padding: 0; }
+        li { margin: 5px 0; padding-left: 15px; border-left: 2px solid var(--neon-green); }
+        
+        .loading { animation: blink 0.8s infinite; color: var(--alert); }
         @keyframes blink { 0% { opacity: 0; } 50% { opacity: 1; } 100% { opacity: 0; } }
+
+        .tag { color: #888; font-size: 0.8rem; text-transform: uppercase; }
     </style>
 </head>
 <body>
 
-    <div class="profile-card">
-        <div class="header">MATABASE_SCAN</div>
-        
-        <div class="user-info">
-            <span class="label">IDENT_NAME:</span><br>
-            <strong>ICYTHECOOLEST</strong>
-        </div>
+    <div class="window full-width">
+        <div class="title">SYSTEM_CORE</div>
+        <div>TARGET_ID: <span id="user-name">LOADING...</span></div>
+        <div>API_ENDPOINT: questfemboys.xyz/api/v1</div>
+        <div id="status" class="loading">ESTABLISHING_UPLINK...</div>
+    </div>
 
-        <div class="user-info">
-            <span class="label">COSMETICS_MANIFEST:</span>
-            <ul id="cosmetics-list" class="cosmetics-list">
-                <li id="loading">FETCHING_DATA...</li>
+    <div class="window">
+        <div class="title">COSMETICS_INVENTORY</div>
+        <ul id="cosmetic-list">
             </ul>
-        </div>
+    </div>
+
+    <div class="window">
+        <div class="title">METADATA_EXTRACT</div>
+        <ul id="meta-list">
+            </ul>
     </div>
 
     <script>
-        async function loadProfile() {
-            const list = document.getElementById('cosmetics-list');
-            // Using the API you provided
+        async function runScan() {
             const api = "https://www.questfemboys.xyz/api/users/add?username=ICYTHECOOLEST";
-
+            
             try {
                 const response = await fetch(api);
                 const data = await response.json();
 
-                // Clear loading text
-                list.innerHTML = "";
+                // Update Header
+                document.getElementById('user-name').innerText = data.username || "ICYTHECOOLEST";
+                document.getElementById('status').innerText = "CONNECTION_STABLE // DATA_SORTED";
+                document.getElementById('status').classList.remove('loading');
 
-                // If the API returns an object with cosmetics (adjust keys if different)
-                // Example assuming the API returns { "cosmetics": ["hat", "glasses"] }
-                const items = data.cosmetics || ["No items detected"];
+                const cosmeticContainer = document.getElementById('cosmetic-list');
+                const metaContainer = document.getElementById('meta-list');
 
-                items.forEach(item => {
-                    const li = document.createElement('li');
-                    li.className = "cosmetic-item";
-                    li.innerText = item.replace(/_/g, " ").toUpperCase();
-                    list.appendChild(li);
+                // Clear placeholders
+                cosmeticContainer.innerHTML = "";
+                metaContainer.innerHTML = "";
+
+                // LOOP & MATCH LOGIC
+                Object.entries(data).forEach(([key, value]) => {
+                    // Match Cosmetics (Hats, Badges, etc)
+                    if (key.includes('cosmetic') || key.includes('hat') || Array.isArray(value)) {
+                        const items = Array.isArray(value) ? value : [value];
+                        items.forEach(item => {
+                            cosmeticContainer.innerHTML += `<li><span class="tag">${key}:</span> ${item}</li>`;
+                        });
+                    } 
+                    // Match everything else as Metadata
+                    else if (key !== 'username') {
+                        metaContainer.innerHTML += `<li><span class="tag">${key}:</span> ${value}</li>`;
+                    }
                 });
 
             } catch (err) {
-                list.innerHTML = "<li style='color:red'>ERR: UNAVILABLE_PROTOCOL</li>";
+                document.getElementById('status').innerText = "ERROR: BYPASS_FAILED";
             }
         }
 
-        loadProfile();
+        runScan();
     </script>
 </body>
 </html>
