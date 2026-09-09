@@ -1,179 +1,260 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MATABASE // SYSTEM_SCAN</title>
+    <title>Admin Key Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --neon-green: #00ff41;
-            --dark-bg: #050505;
-            --purple-haze: #6a0dad;
-            --terminal-font: 'Courier New', Courier, monospace;
-        }
-
-        body {
-            background-color: var(--dark-bg);
-            color: var(--neon-green);
-            font-family: var(--terminal-font);
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background-image: radial-gradient(circle, #1a1a2e 0%, #050505 100%);
-        }
-
-        .terminal-container {
-            width: 100%;
-            max-width: 700px;
-            border: 1px solid var(--neon-green);
-            background: rgba(0, 0, 0, 0.9);
-            box-shadow: 0 0 20px rgba(0, 255, 65, 0.2);
-            padding: 20px;
-        }
-
-        .header {
-            text-align: center;
-            border-bottom: 1px solid var(--neon-green);
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-        }
-
-        .header h1 {
-            margin: 0;
-            font-size: 1.5rem;
-            letter-spacing: 4px;
-            text-shadow: 2px 2px var(--purple-haze);
-        }
-
-        .user-card {
-            border: 1px dashed var(--neon-green);
-            padding: 15px;
-            margin-bottom: 20px;
-            cursor: pointer;
-            transition: 0.3s;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .user-card:hover {
-            background: rgba(0, 255, 65, 0.1);
-            border-style: solid;
-            box-shadow: inset 0 0 10px var(--neon-green);
-        }
-
-        .btn-scan {
-            background: var(--neon-green);
-            color: black;
-            border: none;
-            padding: 8px 15px;
-            font-weight: bold;
-            cursor: pointer;
-            text-transform: uppercase;
-        }
-
-        #data-display {
-            border-top: 1px solid var(--purple-haze);
-            margin-top: 20px;
-            padding-top: 15px;
-            min-height: 200px;
-            max-height: 400px;
-            overflow-y: auto;
-        }
-
-        .data-item {
-            margin: 5px 0;
-            font-size: 0.9rem;
-            border-bottom: 1px solid #111;
-            padding-bottom: 2px;
-        }
-
-        .key { color: #888; text-transform: uppercase; margin-right: 10px; }
-        .val { color: var(--neon-green); font-weight: bold; }
-
-        .loading-text {
-            color: var(--purple-haze);
-            animation: pulse 1s infinite;
-        }
-
-        @keyframes pulse {
-            0% { opacity: 0.4; }
-            50% { opacity: 1; }
-            100% { opacity: 0.4; }
-        }
-
-        /* Scrollbar Styling */
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-thumb { background: var(--purple-haze); }
+        body { font-family: 'Inter', sans-serif; }
     </style>
 </head>
-<body>
+<body class="h-full bg-slate-950 text-slate-100 flex flex-col antialiased selection:bg-indigo-500 selection:text-white">
 
-    <div class="terminal-container">
-        <div class="header">
-            <h1>> MATABASE_SCANNER_v2</h1>
-            <p style="font-size: 0.7rem; color: #555;">UPLINK: matabase.noahshoe08.workers.dev</p>
-        </div>
+    <div id="app" class="min-h-screen flex flex-col">
+        
+        <!-- Login View -->
+        <div id="login-screen" class="flex-1 flex items-center justify-center p-4">
+            <div class="w-full max-w-sm bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-2xl">
+                <h1 class="text-xl font-semibold text-white mb-6">Admin login</h1>
 
-        <div class="user-card" onclick="fetchUserData()">
-            <div>
-                <span style="color: #888;">TARGET:</span> 
-                <span style="font-size: 1.2rem;">ICYTHECOOLEST</span>
+                <form id="login-form" onsubmit="handleLogin(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-1.5">Password</label>
+                        <input type="password" id="admin-key-input" placeholder="••••••••" required
+                            class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3.5 py-2.5 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all">
+                    </div>
+
+                    <div id="login-error" class="hidden text-red-400 text-xs font-medium">
+                        Invalid password. Try 'Supermarket'.
+                    </div>
+
+                    <button type="submit" class="w-full py-2.5 px-4 bg-indigo-600 hover:bg-indigo-500 text-white font-medium rounded-lg text-sm transition-all shadow-sm active:scale-[0.99]">
+                        Log in
+                    </button>
+                </form>
             </div>
-            <button class="btn-scan">INITIALIZE_SCAN</button>
         </div>
 
-        <div id="data-display">
-            <span style="color: #444;">[ SYSTEM READY. CLICK TARGET TO BEGIN EXTRACTION ]</span>
+        <!-- Dashboard View (Hidden initially) -->
+        <div id="dashboard-screen" class="hidden flex-1 flex flex-col">
+            <!-- Top Navigation Bar -->
+            <header class="bg-slate-900 border-b border-slate-800 px-6 py-3.5">
+                <div class="max-w-5xl mx-auto flex items-center justify-between">
+                    <span class="font-semibold text-sm text-white tracking-tight">KeyGen Admin</span>
+                    <button onclick="handleLogout()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-lg text-xs font-medium transition-all border border-slate-700/50">
+                        Logout
+                    </button>
+                </div>
+            </header>
+
+            <!-- Main Dashboard Body -->
+            <main class="flex-1 max-w-5xl w-full mx-auto p-6 space-y-6">
+                <!-- Generator Panel -->
+                <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 space-y-5 shadow-sm">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <!-- Tab Buttons -->
+                        <div class="inline-flex bg-slate-950 p-1 rounded-lg border border-slate-800">
+                            <button onclick="switchTab('Lifetime')" id="tab-Lifetime" class="px-3.5 py-1.5 rounded-md text-xs font-medium transition-all bg-indigo-600 text-white">
+                                Lifetime
+                            </button>
+                            <button onclick="switchTab('Weekly')" id="tab-Weekly" class="px-3.5 py-1.5 rounded-md text-xs font-medium transition-all text-slate-400 hover:text-white">
+                                Weekly
+                            </button>
+                            <button onclick="switchTab('Trial')" id="tab-Trial" class="px-3.5 py-1.5 rounded-md text-xs font-medium transition-all text-slate-400 hover:text-white">
+                                Trial
+                            </button>
+                        </div>
+
+                        <!-- Prominent Generate Button -->
+                        <button onclick="generateKey()" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-medium rounded-lg text-xs transition-all shadow-sm active:scale-[0.99] flex items-center justify-center space-x-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                            <span>Generate Key</span>
+                        </button>
+                    </div>
+
+                    <!-- Newly Generated Key Display Section -->
+                    <div id="recent-key-container" class="hidden bg-slate-950 border border-slate-800/80 rounded-lg p-4 flex items-center justify-between gap-4">
+                        <div>
+                            <span class="text-[10px] uppercase tracking-wider text-slate-500 font-semibold block mb-1">Newly Generated Key</span>
+                            <span id="recent-key-text" class="text-sm font-mono text-indigo-400 select-all font-medium">---</span>
+                        </div>
+                        <button onclick="copyRecentKey()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-md text-xs font-medium transition-all border border-slate-700/50 flex-shrink-0">
+                            Copy
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Key Management Table -->
+                <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-sm">
+                    <div class="px-6 py-4 border-b border-slate-800 flex items-center justify-between">
+                        <h2 class="text-xs font-semibold uppercase tracking-wider text-slate-400">Generated Keys</h2>
+                        <span id="key-count" class="text-xs text-slate-500">0 keys</span>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="border-b border-slate-800 text-[11px] font-medium text-slate-400 uppercase tracking-wider bg-slate-950/40">
+                                    <th class="py-3 px-6">Key String</th>
+                                    <th class="py-3 px-6">Type</th>
+                                    <th class="py-3 px-6">Status</th>
+                                    <th class="py-3 px-6 text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="key-table-body" class="divide-y divide-slate-800/60 text-xs">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Empty State -->
+                    <div id="empty-state" class="py-12 text-center">
+                        <p class="text-sm text-slate-500">No keys generated yet.</p>
+                    </div>
+                </div>
+            </main>
         </div>
     </div>
 
     <script>
-        async function fetchUserData() {
-            const display = document.getElementById('data-display');
-            const workerUrl = "https://matabase.noahshoe08.workers.dev/ICYTHECOOLEST";
+        let currentType = 'Lifetime';
+        let keys = JSON.parse(localStorage.getItem('admin_keys') || '[]');
 
-            // Show Loading State
-            display.innerHTML = '<div class="loading-text">BYPASSING_FIREWALL... <br>EXTRACTING_NAKAMA_METADATA...</div>';
+        function handleLogin(e) {
+            e.preventDefault();
+            const val = document.getElementById('admin-key-input').value.trim();
+            const err = document.getElementById('login-error');
 
-            try {
-                const response = await fetch(workerUrl);
-                
-                if (!response.ok) {
-                    throw new Error("UPLINK_DENIED");
-                }
-
-                const wrapper = await response.json();
-                
-                // We access .user_data because your worker wraps the API response there
-                const data = wrapper.user_data; 
-
-                // Clear the display
-                display.innerHTML = '<div style="color:var(--purple-haze); margin-bottom:10px;">[ DATA_DUMP_SUCCESSFUL ]</div>';
-
-                // DYNAMIC LOOP: Prints EVERYTHING in the API
-                Object.entries(data).forEach(([key, value]) => {
-                    const item = document.createElement('div');
-                    item.className = 'data-item';
-                    
-                    // Format arrays (like cosmetics) or objects cleanly
-                    let displayValue = value;
-                    if (Array.isArray(value)) {
-                        displayValue = value.join(', ');
-                    } else if (typeof value === 'object' && value !== null) {
-                        displayValue = JSON.stringify(value);
-                    }
-
-                    item.innerHTML = `<span class="key">${key}:</span> <span class="val">${displayValue}</span>`;
-                    display.appendChild(item);
-                });
-
-            } catch (error) {
-                display.innerHTML = `<div style="color:red;">CRITICAL_ERROR: ${error.message}<br>Check Cloudflare Worker Status.</div>`;
+            if (val === 'Supermarket') {
+                err.classList.add('hidden');
+                document.getElementById('login-screen').classList.add('hidden');
+                document.getElementById('dashboard-screen').classList.remove('hidden');
+                renderTable();
+            } else {
+                err.classList.remove('hidden');
+                document.getElementById('admin-key-input').value = '';
             }
+        }
+
+        function handleLogout() {
+            document.getElementById('dashboard-screen').classList.add('hidden');
+            document.getElementById('login-screen').classList.remove('hidden');
+            document.getElementById('admin-key-input').value = '';
+            document.getElementById('recent-key-container').classList.add('hidden');
+        }
+
+        function switchTab(type) {
+            currentType = type;
+            ['Lifetime', 'Weekly', 'Trial'].forEach(t => {
+                const btn = document.getElementById(`tab-${t}`);
+                if (t === type) {
+                    btn.className = 'px-3.5 py-1.5 rounded-md text-xs font-medium transition-all bg-indigo-600 text-white';
+                } else {
+                    btn.className = 'px-3.5 py-1.5 rounded-md text-xs font-medium transition-all text-slate-400 hover:text-white';
+                }
+            });
+        }
+
+        function generateKey() {
+            const prefix = currentType.toUpperCase();
+            const rand1 = Math.random().toString(36).substring(2, 6).toUpperCase();
+            const rand2 = Math.random().toString(36).substring(2, 6).toUpperCase();
+            const rand3 = Math.random().toString(36).substring(2, 6).toUpperCase();
+            const keyStr = `${prefix}-${rand1}-${rand2}-${rand3}`;
+
+            const newEntry = {
+                id: Date.now().toString(),
+                key: keyStr,
+                type: currentType,
+                status: 'Active'
+            };
+
+            keys.unshift(newEntry);
+            localStorage.setItem('admin_keys', JSON.stringify(keys));
+
+            // Show recent key container
+            const container = document.getElementById('recent-key-container');
+            const textElem = document.getElementById('recent-key-text');
+            textElem.textContent = keyStr;
+            container.classList.remove('hidden');
+
+            renderTable();
+        }
+
+        function copyRecentKey() {
+            const text = document.getElementById('recent-key-text').textContent;
+            copyToClipboard(text);
+        }
+
+        function copyKey(text) {
+            copyToClipboard(text);
+        }
+
+        function copyToClipboard(text) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            document.body.appendChild(textarea);
+            textarea.focus();
+            textarea.select();
+            try {
+                document.execCommand('copy');
+            } catch (err) {}
+            document.body.removeChild(textarea);
+        }
+
+        function revokeKey(id) {
+            keys = keys.map(k => {
+                if (k.id === id) k.status = 'Revoked';
+                return k;
+            });
+            localStorage.setItem('admin_keys', JSON.stringify(keys));
+            renderTable();
+        }
+
+        function deleteKey(id) {
+            keys = keys.filter(k => k.id !== id);
+            localStorage.setItem('admin_keys', JSON.stringify(keys));
+            renderTable();
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('key-table-body');
+            const emptyState = document.getElementById('empty-state');
+            const countElem = document.getElementById('key-count');
+
+            tbody.innerHTML = '';
+            countElem.textContent = `${keys.length} key${keys.length === 1 ? '' : 's'}`;
+
+            if (keys.length === 0) {
+                emptyState.classList.remove('hidden');
+                return;
+            } else {
+                emptyState.classList.add('hidden');
+            }
+
+            keys.forEach(k => {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-slate-950/30 transition-colors';
+
+                const statusBadge = k.status === 'Active'
+                    ? '<span class="px-2 py-0.5 rounded text-[10px] font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Active</span>'
+                    : '<span class="px-2 py-0.5 rounded text-[10px] font-medium bg-red-500/10 text-red-400 border border-red-500/20">Revoked</span>';
+
+                tr.innerHTML = `
+                    <td class="py-3 px-6 font-mono text-slate-200">${k.key}</td>
+                    <td class="py-3 px-6 text-slate-300 font-medium">${k.type}</td>
+                    <td class="py-3 px-6">${statusBadge}</td>
+                    <td class="py-3 px-6 text-right space-x-2">
+                        <button onclick="copyKey('${k.key}')" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded text-xs transition-all">Copy</button>
+                        ${k.status === 'Active' ? `<button onclick="revokeKey('${k.id}')" class="px-2 py-1 bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 rounded text-xs transition-all">Revoke</button>` : ''}
+                        <button onclick="deleteKey('${k.id}')" class="px-2 py-1 bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded text-xs transition-all">Delete</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
         }
     </script>
 </body>
